@@ -27,7 +27,7 @@ function App() {
 
   return (
     <>
-      <span className="text-xl font-bold">App</span>
+      <span className="text-xl font-bold">App Hijin</span>
       <br />
       Componente de la aplicación (En este componente se tendrán que agregar
       todas las pantallas las cuales, por medio de validaciones, se mostrarán)
