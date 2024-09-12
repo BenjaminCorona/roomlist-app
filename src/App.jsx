@@ -27,15 +27,10 @@ function App() {
 
   return (
     <>
-      <span className="text-xl font-bold">App Hijin</span>
-      <br />
-      Componente de la aplicación (En este componente se tendrán que agregar
-      todas las pantallas las cuales, por medio de validaciones, se mostrarán)
-      <br />
-      <span className="text-xl font-bold">Login / Register page</span>
+      <span className="text-xl font-bold">Registro / Inicio de Sesión</span>
       <LoginRegister />
       <br />
-      <span className="text-xl font-bold">Create - Join Room</span>
+      <span className="text-xl font-bold">Crear - Unirse a la Sala</span>
       <CreateJoinRoom />
       <br />
       <span className="text-xl font-bold">Create new Room</span>
