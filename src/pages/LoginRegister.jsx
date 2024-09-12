@@ -43,7 +43,7 @@ export default function AuthForm() {
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña</label>
                   <div className="relative">
                     <LockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-                    <input
+                    <input  
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
@@ -51,7 +51,7 @@ export default function AuthForm() {
                     />
                     <button
                       type="button"
-                      className="absolute right-1 top-1/2 transform -translate-y-1/2"
+                      className="pr-1 absolute right-1 top-1/2 transform -translate-y-1/2"
                       onClick={togglePasswordVisibility}
                     >
                       {showPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
@@ -92,7 +92,7 @@ export default function AuthForm() {
                     />
                     <button
                       type="button"
-                      className="absolute right-1 top-1/2 transform -translate-y-1/2"
+                      className="pr-1 absolute right-1 top-1/2 transform -translate-y-1/2"
                       onClick={togglePasswordVisibility}
                     >
                       {showPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}

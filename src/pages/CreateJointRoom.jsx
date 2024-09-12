@@ -18,17 +18,17 @@ export default function CreateJoinRoom() {
           {/* Main content */}
           <main>
             <h1 className="text-2xl font-bold mb-2">Ingresar a Sala</h1>
-            <br />
             <div className="relative">
                     <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
                     <input id="name" placeholder="Código de Sala" className="pl-3 w-1/2 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                  </div>
+                    <button className="w-1/4 mt-6 ml-4 bg-blue-500 text-white py-2 rounded-lg">Unirse</button>
+            </div>
             <div className="relative">
             <button className="w-1/4 mt-6 bg-blue-500 text-white py-2 rounded-lg">Crear Sala</button>
             </div>
             <br />
             <br />
-            <p className="text-gray-500 mb-6">Salas Recientes:</p>
+            <p className="text-gray-600 text-large mb-6">Salas Recientes:</p>
 
             {/* Workspace options */}
             <div className="space-y-4">
