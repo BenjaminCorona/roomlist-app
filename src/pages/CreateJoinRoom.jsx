@@ -49,6 +49,7 @@ export default function CreateJoinRoom() {
                 members={18}
                 icon="1"
                 iconBg="bg-gray-900"
+                clickEvent={navigateRoomList}
               />
               <WorkspaceOption
                 name="Sala 2"
@@ -56,6 +57,7 @@ export default function CreateJoinRoom() {
                 icon="2"
                 iconBg="bg-purple-200"
                 iconColor="text-purple-600"
+                clickEvent={navigateRoomList}
               />
             </div>
           </main>
@@ -72,7 +74,7 @@ export default function CreateJoinRoom() {
   )
 }
 
-function WorkspaceOption({ name, members, icon, iconBg, iconColor = "text-white" }) {
+function WorkspaceOption({ name, members, icon, iconBg, iconColor = "text-white", clickEvent }) {
   return (
     <div className="flex items-center justify-between p-4">
       <div className="flex items-center">
@@ -84,7 +86,7 @@ function WorkspaceOption({ name, members, icon, iconBg, iconColor = "text-white"
           <p className="text-sm text-gray-500">{members} Members</p>
         </div>
       </div>
-      <button variant="default" className="bg-[#ffffff] hover:bg-[#bbbfc1]">
+      <button onClick={clickEvent} variant="default" className="bg-[#ffffff] hover:bg-[#bbbfc1]">
         Join
       </button>
     </div>
