@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { EyeIcon, EyeOffIcon, LockIcon, MailIcon, UserIcon } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 export default function AuthForm() {
   const [showPassword, setShowPassword] = useState(false)
@@ -7,6 +8,12 @@ export default function AuthForm() {
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword)
 
+  const navigate = useNavigate();
+
+  const navigateCreateJoinRoom = () => {
+    navigate('/create-join-room');
+  }
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg">
@@ -59,7 +66,7 @@ export default function AuthForm() {
                   </div>
                 </div>
               </div>
-              <button className="w-full mt-6 bg-blue-500 text-white py-2 rounded-lg">Iniciar Sesión</button>
+              <button onClick={navigateCreateJoinRoom} className="w-full mt-6 bg-blue-500 text-white py-2 rounded-lg">Iniciar Sesión</button>
             </form>
           )}
           {activeTab === "register" && (

@@ -1,7 +1,19 @@
 import { ArrowLeft, Plus } from "lucide-react"
+import React from "react"
+import { useNavigate } from "react-router-dom"
 
 
 export default function CreateJoinRoom() {
+  const navigate = useNavigate();
+
+  const navigateRoomList = () => {
+    navigate('/room-list')
+  }
+
+  const navigateCreateNewRoom = () => {
+    navigate('/create-new-room');
+  } 
+
   return (
     <div className="flex h-screen bg-[#ffffff] p-6">
       <div className="w-full max-w-3xl mx-auto bg-white rounded-3xl overflow-hidden flex">
@@ -21,10 +33,10 @@ export default function CreateJoinRoom() {
             <div className="relative">
                     <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
                     <input id="name" placeholder="Código de Sala" className="pl-3 w-1/2 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    <button className="w-1/4 mt-6 ml-6 bg-blue-500 text-white py-2 rounded-lg">Unirse</button>
+                    <button onClick={navigateRoomList} className="w-1/4 mt-6 ml-6 bg-blue-500 text-white py-2 rounded-lg">Unirse</button>
             </div>
             <div className="relative">
-            <button className="w-1/4 mt-6 bg-blue-500 text-white py-2 rounded-lg">Crear Sala</button>
+            <button onClick={navigateCreateNewRoom} className="w-1/4 mt-6 bg-blue-500 text-white py-2 rounded-lg">Crear Sala</button>
             </div>
             <br />
             <br />

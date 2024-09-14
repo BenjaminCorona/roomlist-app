@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PlusCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateNewRoom() {
   const [nombre, setNombre] = useState("");
@@ -30,6 +31,12 @@ export default function CreateNewRoom() {
     setNombre("");
     setDescripcion("");
   };
+
+  const navigate = useNavigate();
+
+  const navigateRoomList = () => {
+    navigate('/room-list')
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-100 to-purple-100 p-4">
@@ -65,6 +72,7 @@ export default function CreateNewRoom() {
             />
           </div>
           <button
+          onClick={navigateRoomList}
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded flex items-center justify-center"
           >

@@ -17,6 +17,7 @@ import {
   History,
   HistoryIcon
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function RoomList() {
   /** 
@@ -82,6 +83,15 @@ export default function RoomList() {
 
   // Array de usuarios que se va a mostrar
   const users = ['User1', 'User2', 'User3', 'User4', 'User5'];
+  const navigate = useNavigate(); 
+  
+  const navigateHistory = () => {
+    navigate('/history');
+  }
+
+  const navigateProfileSettings = () => {
+    navigate('/profile-settings');
+  }
 
   return (
     //<div className="flex h-[600px] max-w-6xl mx-auto border rounded-lg overflow-hidden bg-gray-50">
@@ -89,7 +99,7 @@ export default function RoomList() {
       {/* Sidebar */}
       <div className="w-64 bg-white border-r p-4">
         
-        <button className="w-full">
+        <button onClick={navigateProfileSettings} className="w-full">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
             <div className="h-8 w-8 mr-2 bg-gray-300 rounded-full flex items-center justify-center">
@@ -108,7 +118,7 @@ export default function RoomList() {
           <button className="w-full justify-start py-2 px-4 rounded flex items-center bg-orange-100 hover:bg-gray-100">
             <Home size={16} className="mr-2" /> Inicio
           </button>
-          <button className="w-full justify-start py-2 px-4 rounded flex items-center hover:bg-gray-100">
+          <button onClick={navigateHistory} className="w-full justify-start py-2 px-4 rounded flex items-center hover:bg-gray-100">
             <History size={16} className="mr-2" /> Historial
           </button>
           {/** 
