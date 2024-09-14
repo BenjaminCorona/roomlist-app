@@ -5,81 +5,102 @@ const activityData = [
   {
     id: 1,
     user: { name: "Alice", avatar: "/placeholder.svg?height=32&width=32" },
-    action: "added",
-    task: "Create wireframes for new project",
-    timestamp: "2 minutes ago",
+    action: "agregó",
+    task: "Crear esquemas para un nuevo proyecto",
+    timestamp: "Hace 2 minutos",
   },
   {
     id: 2,
     user: { name: "Bob", avatar: "/placeholder.svg?height=32&width=32" },
-    action: "completed",
-    task: "Review client feedback",
-    timestamp: "1 hour ago",
+    action: "completó",
+    task: "Revisar los comentarios de los clientes",
+    timestamp: "Hace 1 hora",
   },
   {
     id: 3,
     user: { name: "Charlie", avatar: "/placeholder.svg?height=32&width=32" },
-    action: "modified",
-    task: "Update project timeline",
-    timestamp: "3 hours ago",
+    action: "modificó",
+    task: "Actualizar el cronograma del proyecto",
+    timestamp: "Hace 3 horas",
   },
   {
     id: 4,
     user: { name: "Diana", avatar: "/placeholder.svg?height=32&width=32" },
-    action: "added",
-    task: "Schedule team meeting",
-    timestamp: "Yesterday",
+    action: "agregó",
+    task: "Programar reunión de equipo",
+    timestamp: "Ayer",
   },
   {
     id: 5,
     user: { name: "Ethan", avatar: "/placeholder.svg?height=32&width=32" },
-    action: "completed",
-    task: "Prepare presentation slides",
-    timestamp: "2 days ago",
+    action: "completó",
+    task: "Preparar diapositivas de presentación",
+    timestamp: "Hace 2 días",
+  },
+  {
+    id: 6,
+    user: { name: "Evan", avatar: "/placeholder.svg?height=32&width=32" },
+    action: "modificó",
+    task: "Actualizar el organigrama del proyecto",
+    timestamp: "Hace 2 horas",
+  },
+  {
+    id: 7,
+    user: { name: "Andy", avatar: "/placeholder.svg?height=32&width=32" },
+    action: "agregó",
+    task: "Realizar prueba de conexión",
+    timestamp: "Hace 2 horas",
   },
 ]
 
 export default function History() {
-  const [filter, setFilter] = useState("All activity")
+  const [filter, setFilter] = useState("Toda la actividad")
 
   return (
     <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow">
       <header className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Activity History</h1>
+        <h1 className="text-2xl font-bold">Historial de Actividades</h1>
         <DropdownMenu filter={filter} setFilter={setFilter} />
       </header>
-      <ul className="space-y-4">
-        {activityData.map((item) => (
-          <li key={item.id} className="flex items-start space-x-4 p-3 hover:bg-gray-50 rounded-md transition-colors">
-            <Avatar src={item.user.avatar} alt={item.user.name} fallback={item.user.name.charAt(0)} />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900">
-                {item.user.name}{" "}
-                <span className="font-normal text-gray-500">{item.action} the task:</span>
-              </p>
-              <p className="text-sm text-gray-500 truncate">{item.task}</p>
-            </div>
-            <div className="flex items-center">
-              {item.action === "added" && (
-                <svg className="h-5 w-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-              )}
-              {item.action === "completed" && (
-                <svg className="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              )}
-              {item.action === "modified" && (
-                <svg className="h-5 w-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v4h16V4m0 0l-8 8-8-8m16 16V8m0 0L12 12M4 8v12h16" />
-                </svg>
-              )}
-              <span className="text-xs text-gray-400">{item.timestamp}</span>
-            </div>
-          </li>
-        ))}
-      </ul>
+
+      {/* Contenedor para las tareas con scroll */}
+      <div className="max-h-80 overflow-y-auto space-y-4">
+      
+        <ul className="space-y-4">
+          {activityData.map((item) => (
+            <li key={item.id} className="flex items-start space-x-4 p-3 hover:bg-gray-50 rounded-md transition-colors">
+              <Avatar src={item.user.avatar} alt={item.user.name} fallback={item.user.name.charAt(0)} />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900">
+                  {item.user.name}{" "}
+                  <span className="font-normal text-gray-500">{item.action} la tarea:</span>
+                </p>
+                <p className="text-sm text-gray-500 truncate">{item.task}</p>
+              </div>
+              <div className="flex items-center">
+                {item.action === "agregó" && (
+                  <svg className="h-5 w-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                )}
+                {item.action === "completó" && (
+                  <svg className="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+                {item.action === "modificó" && (
+                  <svg className="h-5 w-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v4h16V4m0 0l-8 8-8-8m16 16V8m0 0L12 12M4 8v12h16" />
+                  </svg>
+                )}
+                <span className="text-xs text-gray-400">{item.timestamp}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+      </div> {/* Contenedor para las tareas con scroll */}
+      
     </div>
   )
 }
@@ -120,38 +141,38 @@ function Avatar({ src, alt, fallback }) {
             <li
               className="px-4 py-2 cursor-pointer hover:bg-gray-100"
               onClick={() => {
-                setFilter("All activity")
+                setFilter("Toda la actividad")
                 setIsOpen(false)
               }}
             >
-              All activity
+              Toda la actividad
             </li>
             <li
               className="px-4 py-2 cursor-pointer hover:bg-gray-100"
               onClick={() => {
-                setFilter("Added tasks")
+                setFilter("Tareas añadidas")
                 setIsOpen(false)
               }}
             >
-              Added tasks
+              Tareas añadidas
             </li>
             <li
               className="px-4 py-2 cursor-pointer hover:bg-gray-100"
               onClick={() => {
-                setFilter("Completed tasks")
+                setFilter("Tareas completadas")
                 setIsOpen(false)
               }}
             >
-              Completed tasks
+              Tareas completadas
             </li>
             <li
               className="px-4 py-2 cursor-pointer hover:bg-gray-100"
               onClick={() => {
-                setFilter("Modified tasks")
+                setFilter("Tareas modificadas")
                 setIsOpen(false)
               }}
             >
-              Modified tasks
+              Tareas modificadas
             </li>
           </ul>
         )}
