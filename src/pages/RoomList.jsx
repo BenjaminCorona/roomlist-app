@@ -1,31 +1,79 @@
-import { useState } from 'react'
-import { Bell, Inbox, Calendar, Tag, ChevronDown, Plus, Search, CheckCircle2 } from 'lucide-react'
+import { useState } from "react";
+import CardTask from "../components/CardTask";
+import {
+  Bell,
+  Inbox,
+  Calendar,
+  Tag,
+  ChevronDown,
+  Plus,
+  Search,
+  CheckCircle2,
+} from "lucide-react";
 
 export default function RoomList() {
   const [tasks, setTasks] = useState([
-    { id: 1, title: 'Hacer 30 min de yoga 🧘', time: '7:30 am', completed: false, project: 'Mis Proyectos' },
-    { id: 2, title: 'Cita médica', time: '10:00 am', completed: false, project: 'Mis Proyectos' },
-    { id: 3, title: 'Comprar pan', time: '', completed: false, project: 'Mis Proyectos' },
-    { id: 4, title: 'Planificar sesiones de investigación de usuarios', time: '2:00 pm', completed: false, project: 'Equipo', calendar: true },
-    { id: 5, title: 'Enviar sugerencias sobre el diseño de Ana', time: '', completed: true, project: 'Equipo' },
-    { id: 6, title: 'Reunión general', time: '', completed: false, project: 'Equipo' },
-  ])
+    {
+      id: 1,
+      title: "Hacer 30 min de yoga 🧘",
+      time: "7:30 am",
+      completed: false,
+      project: "Mis Proyectos",
+    },
+    {
+      id: 2,
+      title: "Cita médica",
+      time: "10:00 am",
+      completed: false,
+      project: "Mis Proyectos",
+    },
+    {
+      id: 3,
+      title: "Comprar pan",
+      time: "",
+      completed: false,
+      project: "Mis Proyectos",
+    },
+    {
+      id: 4,
+      title: "Planificar sesiones de investigación de usuarios",
+      time: "2:00 pm",
+      completed: false,
+      project: "Equipo",
+      calendar: true,
+    },
+    {
+      id: 5,
+      title: "Enviar sugerencias sobre el diseño de Ana",
+      time: "",
+      completed: true,
+      project: "Equipo",
+    },
+    {
+      id: 6,
+      title: "Reunión general",
+      time: "",
+      completed: false,
+      project: "Equipo",
+    },
+  ]);
 
   const projects = [
-    { name: 'Fitness', color: 'text-red-500' },
-    { name: 'Supermercado', color: 'text-yellow-500' },
-    { name: 'Citas', color: 'text-blue-500' },
-  ]
+    { name: "Fitness", color: "text-red-500" },
+    { name: "Supermercado", color: "text-yellow-500" },
+    { name: "Citas", color: "text-blue-500" },
+  ];
 
   const teamProjects = [
-    { name: 'Nueva marca', color: 'text-yellow-500' },
-    { name: 'Actualización del sitio', color: 'text-purple-500' },
-    { name: 'Plan de desarrollo de producto', color: 'text-green-500' },
-    { name: 'Agenda de reuniones', color: 'text-pink-500' },
-  ]
+    { name: "Nueva marca", color: "text-yellow-500" },
+    { name: "Actualización del sitio", color: "text-purple-500" },
+    { name: "Plan de desarrollo de producto", color: "text-green-500" },
+    { name: "Agenda de reuniones", color: "text-pink-500" },
+  ];
 
   return (
-    <div className="flex h-[600px] max-w-4xl mx-auto border rounded-lg overflow-hidden bg-gray-50">
+    //<div className="flex h-[600px] max-w-6xl mx-auto border rounded-lg overflow-hidden bg-gray-50">
+    <div className="flex h-screen w-screen mx-auto border rounded-lg overflow-hidden bg-gray-50">
       {/* Sidebar */}
       <div className="w-64 bg-white border-r p-4">
         <div className="flex items-center justify-between mb-6">
@@ -84,19 +132,31 @@ export default function RoomList() {
       {/* Main Content */}
       <div className="flex-1 p-6 overflow-auto">
         <h1 className="text-2xl font-bold mb-4">Hoy</h1>
+        {/**
         <div className="space-y-6">
-          {['Mis Proyectos', 'Equipo'].map((section) => (
+          {["Mis Proyectos", "Equipo"].map((section) => (
             <div key={section}>
               <h2 className="text-lg font-semibold mb-2">{section}</h2>
               <ul className="space-y-2">
                 {tasks
-                  .filter(task => task.project === section)
+                  .filter((task) => task.project === section)
                   .map((task) => (
                     <li key={task.id} className="flex items-center">
                       <button className="rounded-full p-0 mr-2 flex items-center justify-center">
-                        <CheckCircle2 size={20} className={task.completed ? "text-red-500" : "text-gray-300"} />
+                        <CheckCircle2
+                          size={20}
+                          className={
+                            task.completed ? "text-red-500" : "text-gray-300"
+                          }
+                        />
                       </button>
-                      <span className={task.completed ? "line-through text-gray-500" : ""}>{task.title}</span>
+                      <span
+                        className={
+                          task.completed ? "line-through text-gray-500" : ""
+                        }
+                      >
+                        {task.title}
+                      </span>
                       {task.time && (
                         <span className="ml-2 text-sm text-green-600 flex items-center">
                           <Calendar size={12} className="mr-1" />
@@ -104,7 +164,9 @@ export default function RoomList() {
                         </span>
                       )}
                       {task.calendar && (
-                        <span className="ml-2 text-sm text-gray-500">Calendario</span>
+                        <span className="ml-2 text-sm text-gray-500">
+                          Calendario
+                        </span>
                       )}
                     </li>
                   ))}
@@ -117,7 +179,14 @@ export default function RoomList() {
             </div>
           ))}
         </div>
+        */}
+        <div id="task-container" className="flex items-center w-full h-[80%] justify-evenly">
+          <CardTask title = "to do"/>
+          <CardTask title = "in progress"/>
+          <CardTask title = "done"/>
+          <CardTask title = "complete"/>
+        </div>
       </div>
     </div>
-  )
+  );
 }
