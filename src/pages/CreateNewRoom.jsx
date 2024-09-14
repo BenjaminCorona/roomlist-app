@@ -36,7 +36,7 @@ export default function CreateNewRoom() {
       <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold">Crear Nueva Sala</h1>
-          <p>Ingresa los detalles para tu nueva sala de chat</p>
+          <p>Ingresa los detalles para tu nueva sala</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
