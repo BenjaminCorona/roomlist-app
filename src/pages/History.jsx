@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { motion } from "framer-motion"
 
 // Datos de ejemplo
 const activityData = [
@@ -53,6 +54,22 @@ const activityData = [
   },
 ]
 
+const taskVariants= {
+  offscreen: {
+    x: 200, //coordenada inicial del elemento en x
+  },
+  onscreen: (i)=>({ //iteracion de i (valor de item.id) 1 en 1
+    x: 0, //coordenada final del elemento en x
+    rotate: 0,
+    transition: {
+      type: "spring", //tipo de transición
+      bounce: 0.4, //valor de rebote en la animacion
+      duration: 0.8, //duracion de la animacion
+      delay: i <= 4 ? i * 0.12: 0,//delay asignado a los primeros 4 elementos de acuerdo al valor de i  
+    },
+  }),
+}
+
 export default function History() {
   const [filter, setFilter] = useState("Toda la actividad")
 
@@ -64,11 +81,21 @@ export default function History() {
       </header>
 
       {/* Contenedor para las tareas con scroll */}
-      <div className="max-h-80 overflow-y-auto space-y-4">
+      <motion.div className="max-h-80 overflow-y-auto overflow-x-hidden  space-y-4">
       
         <ul className="space-y-4">
           {activityData.map((item) => (
-            <li key={item.id} className="flex items-start space-x-4 p-3 hover:bg-gray-50 rounded-md transition-colors">
+            <motion.li
+
+            /* Animacion de cada tarea dentro del historial */
+            initial="offscreen"
+            whileInView="onscreen"
+            viewport={{ once: true, amount: 0.4 }}
+            custom={item.id} //Se envia valor de item.id para configurar un retraso en los primeros elementos
+            variants={taskVariants}
+            /* Fin de animacion */
+
+            key={item.id} className="flex items-start space-x-4 p-3 hover:bg-gray-50 rounded-md transition-colors">
               <Avatar src={item.user.avatar} alt={item.user.name} fallback={item.user.name.charAt(0)} />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900">
@@ -95,16 +122,15 @@ export default function History() {
                 )}
                 <span className="text-xs text-gray-400">{item.timestamp}</span>
               </div>
-            </li>
+            </motion.li>
           ))}
         </ul>
 
-      </div> {/* Contenedor para las tareas con scroll */}
+      </motion.div> {/* Contenedor para las tareas con scroll */}
       
     </div>
   )
 }
-
 
 
 // Componentes auxiliares
