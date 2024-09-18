@@ -27,29 +27,29 @@ function App() {
 
   return (
     <>
-      <span className="text-xl font-bold">App</span>
-      <br />
-      Componente de la aplicación (En este componente se tendrán que agregar
-      todas las pantallas las cuales, por medio de validaciones, se mostrarán)
-      <br />
-      <span className="text-xl font-bold">Login / Register page</span>
-      <LoginRegister />
-      <br />
-      <span className="text-xl font-bold">Create - Join Room</span>
-      <CreateJoinRoom />
-      <br />
-      <span className="text-xl font-bold">Create new Room</span>
-      <CreateNewRoom />
-      <br />
-      <span className="text-xl font-bold">RoomList</span>
-      <RoomList />
-      <br />
-      <span className="text-xl font-bold">Menu / Profile</span>
-      <ProfileSettings />
-      <br />
-      <span className="text-xl font-bold">History</span>
-      <History />
-      <br />
+      {/*<span className="text-xl font-bold">App</span>*/}
+      {/*<br />*/}
+      {/*Componente de la aplicación (En este componente se tendrán que agregar*/}
+      {/*todas las pantallas las cuales, por medio de validaciones, se mostrarán)*/}
+      {/*<br />*/}
+      {/*<span className="text-xl font-bold">Login / Register page</span>*/}
+      {/*<LoginRegister />*/}
+      {/*<br />*/}
+      {/*<span className="text-xl font-bold">Create - Join Room</span>*/}
+      {/*<CreateJoinRoom />*/}
+      {/*<br />*/}
+      {/*<span className="text-xl font-bold">Create new Room</span>*/}
+      {/*<CreateNewRoom />*/}
+      {/*<br />*/}
+      {/*<span className="text-xl font-bold">RoomList</span>*/}
+      {/*<RoomList />*/}
+      {/*<br />*/}
+      {/*<span className="text-xl font-bold">Menu / Profile</span>*/}
+      {/*<ProfileSettings />*/}
+      {/*<br />*/}
+      {/*<span className="text-xl font-bold">History</span>*/}
+      {/*<History />*/}
+      {/*<br />*/}
       <span className="text-xl font-bold">Add New Task</span>
       <button
         className="bg-green-500 rounded-lg"

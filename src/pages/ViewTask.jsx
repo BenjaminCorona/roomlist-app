@@ -6,7 +6,7 @@ export default function ViewTask() {
 
   return (
       <div className={`fixed inset-0 z-50 ${open ? 'block' : 'hidden'} bg-gray-100 bg-opacity-70`}>
-        <div className="relative mx-auto mt-20 max-w-3xl bg-white border border-gray-200 rounded-lg shadow-lg">
+        <div className="relative mx-auto mt-0g max-w-3xl bg-white border border-gray-200 rounded-lg shadow-lg">
           {/* Dialog Header */}
           <div className="p-4 border-b border-gray-200 flex justify-between items-center">
             <div className="flex items-center space-x-2">
