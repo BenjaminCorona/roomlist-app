@@ -5,7 +5,7 @@ export default function ViewTask() {
   const [open, setOpen] = useState(true)
 
   return (
-      <div className={fixed inset-0 z-50 ${open ? 'block' : 'hidden'} bg-gray-100 bg-opacity-70}>
+      <div className="fixed mb-10 inset-0 z-50 ${open ? 'block' : 'hidden'} bg-gray-100 bg-opacity-70">
         <div className="relative mx-auto mt-0g max-w-3xl bg-white border border-gray-200 rounded-lg shadow-lg">
           {/* Dialog Header */}
           <div className="p-4 border-b border-gray-200 flex justify-between items-center">
@@ -15,15 +15,15 @@ export default function ViewTask() {
               </h2>
             </div>
             <div className="flex items-center space-x-2">
-              {/<button className="p-2 hover:bg-gray-100 rounded-full">/}
-              {/*  <Pencil className="h-4 w-4 text-gray-600" />*/}
-              {/</button>/}
-              {/<button className="p-2 hover:bg-gray-100 rounded-full">/}
-              {/*  <Link className="h-4 w-4 text-gray-600" />*/}
-              {/</button>/}
-              {/<button className="p-2 hover:bg-gray-100 rounded-full">/}
-              {/*  <MoreHorizontal className="h-4 w-4 text-gray-600" />*/}
-              {/</button>/}
+              {/*<button className="p-2 hover:bg-gray-100 rounded-full">*/}
+              {/*<Pencil className="h-4 w-4 text-gray-600" />*/}
+              {/*</button>*/}
+              {/*<button className="p-2 hover:bg-gray-100 rounded-full">*/}
+              {/*<Link className="h-4 w-4 text-gray-600" />*/}
+              {/*</button>*/}
+              {/*<button className="p-2 hover:bg-gray-100 rounded-full">*/}
+              {/*<MoreHorizontal className="h-4 w-4 text-gray-600" />*/}
+              {/*</button>*/}
               <button className="p-2 hover:bg-gray-100 rounded-full" onClick={() => setOpen(false)}>
                 <X className="h-4 w-4 text-gray-600" />
               </button>
