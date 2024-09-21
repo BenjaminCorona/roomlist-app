@@ -1,21 +1,10 @@
 import { useState } from 'react'
 import { Lock, CalendarIcon, PlusIcon, Target, CheckCircle2, Trash2, X } from 'lucide-react'
 
-export default function AddNewTask() {
-  const [open, setOpen] = useState(true)
-  const [subtasks, setSubtasks] = useState([
-    { id: 1, text: 'Identify key findings from the report', completed: false },
-    { id: 2, text: 'Analyze the implications of those findings', completed: false },
-    { id: 3, text: 'Develop action plans based on the findings', completed: false },
-  ])
-
-  const addSubtask = () => {
-    const newSubtask = { id: subtasks.length + 1, text: 'Add a new subtask', completed: false }
-    setSubtasks([...subtasks, newSubtask])
-  }
+export default function AddNewTask({toggle}) {
 
   return (
-      <div className={`fixed inset-0 flex items-center justify-center ${open ? 'visible' : 'hidden'}`}>
+      <div className={"fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70"}>
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center text-sm text-gray-500">
@@ -23,8 +12,8 @@ export default function AddNewTask() {
               Agregar tarea
             </div>
             <div className="flex items-center space-x-2">
-              <button onClick={() => setOpen(false)} className="p-1">
-                <X className="h-4 w-4"/>
+              <button onClick={toggle} className="p-2 hover:bg-gray-100 rounded-full">
+                <X className="h-4 w-4 text-gray-600"/>
               </button>
             </div>
           </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import CardTask from "../components/CardTask";
 import TaskItem from "../components/TaskItem";
 import UserItemList from "../components/UserItemList";
+import AddNewTask from "./AddNewTask";
 import {
   Bell,
   Inbox,
@@ -81,6 +82,13 @@ export default function RoomList() {
   ];
   */
 
+  // Estado para controlar la visibilidad del modal de AddNewTask
+  const [isAddNewTaskModalOpen, setIsAddNewTaskModalOpen] = useState(false);
+  //Funciona para abitrar o cerra el modal de AddNewTask
+  const toggleAddNewTaskModal = () => {
+    setIsAddNewTaskModalOpen(!isAddNewTaskModalOpen);
+  };
+
   // Array de usuarios que se va a mostrar
   const users = ['User1', 'User2', 'User3', 'User4', 'User5'];
   const navigate = useNavigate(); 
@@ -111,9 +119,12 @@ export default function RoomList() {
         </div>
         </button>
         
-        <button className="w-full mb-4 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded flex items-center">
+        <button
+            onClick={toggleAddNewTaskModal}
+            className="w-full mb-4 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded flex items-center">
           <Plus size={16} className="mr-2" /> Añadir tarea
         </button>
+        {isAddNewTaskModalOpen && <AddNewTask toggle={toggleAddNewTaskModal} />}
         <div className="space-y-2">
           <button className="w-full justify-start py-2 px-4 rounded flex items-center bg-orange-100 hover:bg-gray-100">
             <Home size={16} className="mr-2" /> Inicio
@@ -225,8 +236,9 @@ export default function RoomList() {
           className="flex items-center w-full h-[80%] justify-evenly"
         >
           <div className="bg-white shadow-lg flex flex-col items-center p-3 w-[50vw] h-full rounded-xl mr-3 ml-3 overflow-auto ">
-            <span className="font-bold text-gray-600 text-xl flex items-center justify-center"><CircleCheckBig size={20} className="mr-2" /> To do</span>
-            <TaskItem title="Nueva tarea" user="user1" />
+            <span
+                className="font-bold text-gray-600 text-xl flex items-center justify-center"><CircleCheckBig size={20} className="mr-2" /> To do</span>
+            <TaskItem title="Nueva tarea" user="user1"/>
             <TaskItem />
             <TaskItem />
             <TaskItem />
