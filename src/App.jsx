@@ -28,6 +28,7 @@ function App() {
 
   return (
     <>
+
     <BrowserRouter>
         <Routes>
           <Route index path="/" element={<LoginRegister/>} />
@@ -35,9 +36,10 @@ function App() {
           <Route path="/history" element={<History/>} />
           <Route path="/profile-settings" element={<ProfileSettings/>}/>
           <Route path="/create-new-room" element={<CreateNewRoom/>}/>
-          <Route path="/room-list" element={<RoomList/>}/> 
+          <Route path="/room-list" element={<RoomList/>}/>
         </Routes>
-      </BrowserRouter>
+    </BrowserRouter>
+
     </>
   );
 }
