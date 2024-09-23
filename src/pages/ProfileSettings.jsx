@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { LogOut, Save } from "lucide-react"
-
+import { useNavigate } from "react-router-dom";
 
 
 export default function ProfileSettings() {
@@ -25,11 +25,22 @@ export default function ProfileSettings() {
     })
   }
 
+  const navigate = useNavigate();
+  
+  //Funciones de navegacion
+  const navigateRoomList = () => {
+    navigate('/room-list')
+  }
+
+  const navigateLoginRegister = () => {
+    navigate('/')
+  }
+
   return (
     <div className="max-w-2xl mx-auto p-4 space-y-6">
       <h1 className="text-2xl font-bold">Configuración del Perfil</h1>
       <Separator />
-      <form onSubmit={handleSave} className="space-y-4">
+      <form className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="username">Nombre de Usuario</Label>
           <Input
@@ -76,10 +87,10 @@ export default function ProfileSettings() {
           />
         </div>
         <div className="flex justify-between items-center pt-4">
-          <Button type="submit" className="w-32">
+          <Button type="submit" className="w-32" onClick={navigateRoomList}>
             <Save className="mr-2 h-4 w-4" /> Guardar
           </Button>
-          <Button type="button" variant="destructive" className="w-32" onClick={handleLogout}>
+          <Button type="button" variant="destructive" className="w-32" onClick={navigateLoginRegister}>
             <LogOut className="mr-2 h-4 w-4" /> Cerrar Sesión
           </Button>
         </div>
