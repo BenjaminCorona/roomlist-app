@@ -54,6 +54,10 @@ export default function AuthForm() {
       if (record) {
         setRegisterMessage("Usuario registrado exitosamente.");
         console.log("Usuario registrado exitosamente:", record);
+        
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       }
     } catch (error) {
       // Si ocurre un error, mostramos el mensaje de error
