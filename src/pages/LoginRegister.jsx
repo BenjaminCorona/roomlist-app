@@ -36,7 +36,7 @@ export default function AuthForm() {
       navigate('/create-join-room');
     } catch (error) {
       console.error("Error al iniciar sesión", error);
-      swal("No pudimos iniciar sesión", "Verifica tus credenciales", "error");
+      swal("Error al iniciar sesión", "Verifica tus credenciales", "error");
     }
   };
 
