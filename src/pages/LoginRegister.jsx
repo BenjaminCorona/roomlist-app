@@ -131,7 +131,7 @@ export default function AuthForm() {
               <div className="space-y-4">
                 <br />
                 <div className="space-y-2">
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre Completo</label>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre de Usuario (sin espacios)</label>
                   <div className="relative">
                     <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
                     <input 
@@ -160,7 +160,7 @@ export default function AuthForm() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="password-register" className="block text-sm font-medium text-gray-700">Contraseña</label>
+                  <label htmlFor="password-register" className="block text-sm font-medium text-gray-700">Contraseña (mínimo 8 digitos)</label>
                   <div className="relative">
                     <LockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
                     <input
@@ -204,4 +204,3 @@ export default function AuthForm() {
     </div>
   )
 }
-
