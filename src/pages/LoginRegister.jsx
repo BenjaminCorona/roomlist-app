@@ -1,18 +1,40 @@
 import { useState } from 'react'
 import { EyeIcon, EyeOffIcon, LockIcon, MailIcon, UserIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import PocketBase from 'pocketbase';
+import swal from 'sweetalert';
+
+const pb = new PocketBase('https://roomlist.pockethost.io');
 
 export default function AuthForm() {
-  const [showPassword, setShowPassword] = useState(false)
-  const [activeTab, setActiveTab] = useState("login")
+  const [activeTab, setActiveTab] = useState("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const togglePasswordVisibility = () => setShowPassword(!showPassword)
+  const [showPassword, setShowPassword] = useState(false)
+
+  const togglePasswordVisibility = () => setShowPassword  (!showPassword)
 
   const navigate = useNavigate();
 
-  const navigateCreateJoinRoom = () => {
-    navigate('/create-join-room');
-  }
+  // const navigateCreateJoinRoom = () => {
+  //   navigate('/create-join-room');
+  // }
+
+  const handleLogin = async () => {
+    try {
+      // Autenticación con PocketBase usando email y contraseña
+      const authData = await pb.collection('Usuarios').authWithPassword(email, password);
+      console.log("Usuario autenticado:", authData);
+      // Cambiar la pestaña activa si es necesario
+      navigate('/create-join-room'); //
+    } catch (error) {
+      console.error("Error al iniciar sesión", error);
+      swal("No pudimos iniciar sesión", "Verifica tus credenciales", "error");
+    }
+  };
+
+
   
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -41,18 +63,31 @@ export default function AuthForm() {
                 <div className="space-y-2">
                   <br />
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+
+                  {/*Div para ingresar el correo para realizar el login*/}
                   <div className="relative">
                     <MailIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-                    <input id="email" type="email" placeholder="usuario@ejemplo.com" className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <input id="email"
+                           type="email"
+                           value={email}
+                           maxLength={100}
+                           onChange={(e) => setEmail(e.target.value)}
+                           placeholder="usuario@ejemplo.com"
+                           className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña</label>
+
+                  {/*Div para ingresar la contraseña para realizar el login*/}
                   <div className="relative">
                     <LockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
                     <input  
                       id="password"
                       type={showPassword ? "text" : "password"}
+                      onChange={(e) => setPassword(e.target.value)}
+                      value={password}
+                      maxLength={100}
                       placeholder="••••••••"
                       className="pl-10 pr-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -66,7 +101,13 @@ export default function AuthForm() {
                   </div>
                 </div>
               </div>
-              <button onClick={navigateCreateJoinRoom} className="w-full mt-6 bg-blue-500 text-white py-2 rounded-lg">Iniciar Sesión</button>
+
+                {/*Botón para iniciar sesión*/}
+              <button onClick={handleLogin}
+                      className="w-full mt-6 bg-blue-500 text-white py-2 rounded-lg">
+                Iniciar Sesión
+              </button>
+
             </form>
           )}
           {activeTab === "register" && (
