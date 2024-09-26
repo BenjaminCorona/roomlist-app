@@ -35,9 +35,60 @@ export default function AuthForm() {
     });
   };
 
+  // Función de validación para el nombre de usuario
+  const validateUsername = (username) => {
+    if (username.length < 6 || username.length > 32) {
+      return "El nombre de usuario debe tener entre 6 y 32 caracteres.";
+    }
+    return "";
+  };
+
+  // Función de validación para el correo electrónico
+  const validateEmail = (email) => {
+    // Verificar longitud máxima y si incluye el símbolo "@"
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email.length > 255) {
+      return "El correo electrónico no puede tener más de 255 caracteres.";
+    } else if (!emailRegex.test(email)) {
+      return "El correo electrónico debe contener el símbolo '@' y estar en un formato válido.";
+    }
+    return "";
+  };
+
+  // Función de validación para la contraseña
+  const validatePassword = (password) => {
+    if (password.length < 8 || password.length > 32) {
+      return "La contraseña debe tener entre 8 y 32 caracteres.";
+    }
+    return "";
+  };
+
+
   // Manejador de envío del formulario de registro
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
+
+    // Validar el nombre de usuario
+    const usernameError = validateUsername(registerData.name);
+    if (usernameError) {
+      setRegisterMessage(usernameError);
+      return; // No continuar con el registro si hay un error
+    }
+
+    // Validar el correo electrónico
+    const emailError = validateEmail(registerData.email);
+    if (emailError) {
+      setRegisterMessage(emailError);
+      return; // No continuar con el registro si hay un error
+    }
+
+    // Validar la contraseña
+    const passwordError = validatePassword(registerData.password);
+    if (passwordError) {
+      setRegisterMessage(passwordError);
+      return; // No continuar con el registro si hay un error
+    }
+
     const data = {
       "username": registerData.name,
       "email": registerData.email,
@@ -139,7 +190,7 @@ export default function AuthForm() {
                       name="name"
                       value={registerData.name}
                       onChange={handleRegisterChange}
-                      placeholder="Juan Ramírez" 
+                      placeholder="JuanRamirez" 
                       className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" 
                     />
                   </div>
@@ -160,7 +211,7 @@ export default function AuthForm() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="password-register" className="block text-sm font-medium text-gray-700">Contraseña (mínimo 8 digitos)</label>
+                  <label htmlFor="password-register" className="block text-sm font-medium text-gray-700">Contraseña (mínimo 8 dígitos)</label>
                   <div className="relative">
                     <LockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
                     <input
