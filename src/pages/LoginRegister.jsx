@@ -52,7 +52,7 @@ export default function AuthForm() {
     if (email.length > 255) {
       return "El correo electrónico no puede tener más de 255 caracteres.";
     } else if (!emailRegex.test(email)) {
-      return "El correo electrónico no acepta simbolos especiales, solo puede contener A-Z/a-z, 0-9, _ , - y debe contener @.";
+      return "Correo electrónico Inválido. Unicamente puede contener caracteres de A-Z/a-z, 0-9, _ , - y debe contener @.";
     }
     return "";
   };
