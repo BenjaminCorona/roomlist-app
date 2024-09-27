@@ -45,12 +45,14 @@ export default function AuthForm() {
 
   // Función de validación para el correo electrónico
   const validateEmail = (email) => {
-    // Verificar longitud máxima y si incluye el símbolo "@"
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Expresión regular para validar que el correo solo contiene letras, guiones bajos, guiones intermedios y el símbolo "@"
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    // Verificar longitud máxima y formato
     if (email.length > 255) {
       return "El correo electrónico no puede tener más de 255 caracteres.";
     } else if (!emailRegex.test(email)) {
-      return "El correo electrónico debe contener el símbolo '@' y estar en un formato válido.";
+      return "El correo electrónico no acepta simbolos especiales, solo puede contener A-Z/a-z, 0-9, _ , - y debe contener @.";
     }
     return "";
   };
@@ -63,6 +65,29 @@ export default function AuthForm() {
     return "";
   };
 
+  // Función para verificar si el usuario o el correo ya existen en la base de datos
+  const checkIfUserExists = async () => {
+    try {
+      // Verificar si ya existe el nombre de usuario
+      const usernameExists = await pb.collection('Usuarios').getFirstListItem(`username="${registerData.name}"`);
+      
+      if (usernameExists) {
+        return "El nombre de usuario ya está en uso.";
+      }
+      
+      // Verificar si ya existe el correo electrónico
+      const emailExists = await pb.collection('Usuarios').getFirstListItem(`email="${registerData.email}"`);
+      
+      if (emailExists) {
+        return "El correo electrónico ya está registrado.";
+      }
+
+      return "";
+    } catch (error) {
+      console.error("Error al verificar usuario o correo:", error);
+      return "";
+    }
+  };
 
   // Manejador de envío del formulario de registro
   const handleRegisterSubmit = async (e) => {
@@ -89,6 +114,13 @@ export default function AuthForm() {
       return; // No continuar con el registro si hay un error
     }
 
+    // Verificar si el nombre de usuario o el correo electrónico ya existen
+    const userExistsError = await checkIfUserExists();
+    if (userExistsError) {
+      setRegisterMessage(userExistsError);
+      return; // No continuar si ya existe el usuario o correo
+    }
+
     const data = {
       "username": registerData.name,
       "email": registerData.email,
@@ -112,7 +144,7 @@ export default function AuthForm() {
       }
     } catch (error) {
       // Si ocurre un error, mostramos el mensaje de error
-      setRegisterMessage("Error al registrar el usuario. Por favor, inténtalo de nuevo.");
+      setRegisterMessage("Error al registrar el usuario. El correo electronico ya está en uso.");
       console.error("Error al registrar el usuario:", error);
     }
     
