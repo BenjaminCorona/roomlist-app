@@ -24,12 +24,12 @@ export default function AuthForm() {
         <div className="p-6">
           <div className="flex border-b border-gray-200">
             <button
-              className={`w-1/2 py-2 text-center ${activeTab === "login" ? "border-b-2 border-blue-500" : ""}`}
+              className={`w-1/2 py-2 text-center ${activeTab === "login" ? "border-b-2 border-[#4b5563]" : ""}`}
               onClick={() => setActiveTab("login")}>
               Iniciar Sesión
             </button>
             <button
-              className={`w-1/2 py-2 text-center ${activeTab === "register" ? "border-b-2 border-blue-500" : ""}`}
+              className={`w-1/2 py-2 text-center ${activeTab === "register" ? "border-b-2 border-[#4b5563]" : ""}`}
               onClick={() => setActiveTab("register")}
             >
               Registrarse
@@ -43,7 +43,7 @@ export default function AuthForm() {
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
                   <div className="relative">
                     <MailIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-                    <input id="email" type="email" placeholder="usuario@ejemplo.com" className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <input id="email" type="email" placeholder="usuario@ejemplo.com" className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#4b5563]" />
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -54,7 +54,7 @@ export default function AuthForm() {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      className="pl-10 pr-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="pl-10 pr-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#4b5563]"
                     />
                     <button
                       type="button"
@@ -66,7 +66,7 @@ export default function AuthForm() {
                   </div>
                 </div>
               </div>
-              <button onClick={navigateCreateJoinRoom} className="w-full mt-6 bg-blue-500 text-white py-2 rounded-lg">Iniciar Sesión</button>
+              <button onClick={navigateCreateJoinRoom} className="w-full mt-6 bg-[#4b5563] text-white py-2 rounded-lg">Iniciar Sesión</button>
             </form>
           )}
           {activeTab === "register" && (
@@ -77,14 +77,14 @@ export default function AuthForm() {
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre Completo</label>
                   <div className="relative">
                     <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-                    <input id="name" placeholder="Juan Ramírez" className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <input id="name" placeholder="Juan Ramírez" className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#4b5563]" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="email-register" className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
                   <div className="relative">
                     <MailIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-                    <input id="email-register" type="email" placeholder="usuario@ejemplo.com" className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <input id="email-register" type="email" placeholder="usuario@ejemplo.com" className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#4b5563]" />
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -95,7 +95,7 @@ export default function AuthForm() {
                       id="password-register"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      className="pl-10 pr-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="pl-10 pr-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#4b5563]"
                     />
                     <button
                       type="button"
@@ -107,7 +107,7 @@ export default function AuthForm() {
                   </div>
                 </div>
               </div>
-              <button className="w-full mt-6 bg-blue-500 text-white py-2 rounded-lg">Registrarse</button>
+              <button className="w-full mt-6 bg-[#4b5563] text-white py-2 rounded-lg">Registrarse</button>
             </form>
           )}
         </div>
