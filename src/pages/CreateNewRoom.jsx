@@ -74,7 +74,7 @@ export default function CreateNewRoom() {
           <button
           onClick={navigateRoomList}
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded flex items-center justify-center"
+            className="w-full bg-[#4b5563] text-white py-2 rounded flex items-center justify-center"
           >
             <PlusCircle className="mr-2 h-5 w-5" />
             Crear Sala
