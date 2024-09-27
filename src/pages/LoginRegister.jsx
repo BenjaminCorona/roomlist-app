@@ -29,6 +29,11 @@ export default function AuthForm() {
 
   const handleLogin = async () => {
     try {
+      const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailFormat.test(email)) {
+        swal("Error", "Por favor ingresa un correo electrónico válido.", "warning");
+        return;
+      }
       // Autenticación con PocketBase usando email y contraseña
       const authData = await pb.collection('Usuarios').authWithPassword(email, password);
       console.log("Usuario autenticado:", authData);
@@ -73,7 +78,7 @@ export default function AuthForm() {
                         <MailIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
                         <input
                             id="email"
-                            type="email"
+                            type="text"
                             value={email}
                             maxLength={100}
                             onChange={(e) => setEmail(e.target.value)}
