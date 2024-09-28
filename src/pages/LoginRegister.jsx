@@ -299,7 +299,7 @@ export default function AuthForm() {
                   </div>
                 </div>
               </div>
-              <button type="submit" className="w-full mt-6 bg-blue-500 text-white py-2 rounded-lg">Registrarse</button>
+              <button type="submit" className="w-full mt-6 bg-gray-600 text-white py-2 rounded-lg">Registrarse</button>
 
             </form>
           )}
