@@ -106,7 +106,7 @@ export default function RoomList() {
 
   useEffect(() => {
     // Generar un número aleatorio entre 1 y 14
-    const randomNumber = Math.floor(Math.random() * 14) + 1;
+    const randomNumber = Math.floor(Math.random() * 20) + 1;
     // Actualizar el estado con la ruta de la imagen aleatoria
     setBackgroundImage(`/bg-roomlist/bg${randomNumber}.jpg`);
   }, []);
