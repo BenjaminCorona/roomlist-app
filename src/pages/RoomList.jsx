@@ -114,15 +114,23 @@ export default function RoomList() {
   return (
     //<div className="flex h-[600px] max-w-6xl mx-auto border rounded-lg overflow-hidden bg-gray-50">
     <div
-      className="flex h-screen w-screen mx-auto border rounded-lg overflow-hidden bg-cover bg-center"
+      className="flex h-screen w-screen mx-auto overflow-hidden bg-cover bg-center"
       style={{ backgroundImage: `url(${backgroundImage})` }} // Fondo dinámico
     >
+      {/**Estilos generales para esconder la barra*/}
+      <style>
+        {`
+      .flex.flex-col.items-center.w-full.h-screen.rounded-xl.mr-3.ml-3::-webkit-scrollbar {
+        display: none; /* Oculta la barra de desplazamiento para navegadores WebKit */
+      }
+    `}
+      </style>
       {/* Sidebar */}
-      <div className="w-64 bg-white border-r p-4">
+      <div className="w-64 bg-gray-300 p-4 m-3 rounded-2xl bg-opacity-90">
         <button onClick={navigateProfileSettings} className="w-full ">
-          <div className="flex items-center justify-between mb-6 bg-gray-200 px-2 py-2 rounded-full ">
+          <div className="flex items-center justify-between mb-6 bg-gray-200 hover:bg-gray-300 px-2 py-2 rounded-full ">
             <div className="flex items-center">
-              <div className="h-8 w-8 mr-2 bg-gray-300 rounded-full flex items-center justify-center">
+              <div className="h-8 w-8 mr-2 bg-gray-700 rounded-full flex items-center justify-center">
                 <span className="text-white">U</span>
               </div>
               <span className="font-semibold text-gray-600">User</span>
@@ -251,8 +259,9 @@ export default function RoomList() {
             <span className="font-bold bg-gray-100 text-gray-800 bg-opacity-70 rounded-full px-3 py-0 mb-4 text-md flex items-center justify-center ">
               <CircleCheckBig size={20} className="mr-2" /> To do
             </span>
-            <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
-              
+            <div className="flex flex-col items-center w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
+              {/* Ocultar scroll para WebKit (Chrome, Safari) */}
+
               <TaskItem
                 title="Desarrollo de la landing page"
                 user="Juan Perez"
