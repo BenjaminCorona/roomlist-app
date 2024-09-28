@@ -102,14 +102,14 @@ export default function RoomList() {
     navigate("/profile-settings");
   };
 
-  const [backgroundImage, setBackgroundImage] = useState('');
+  const [backgroundImage, setBackgroundImage] = useState("");
 
   useEffect(() => {
     // Generar un número aleatorio entre 1 y 14
     const randomNumber = Math.floor(Math.random() * 14) + 1;
     // Actualizar el estado con la ruta de la imagen aleatoria
     setBackgroundImage(`/bg-roomlist/bg${randomNumber}.jpg`);
-  }, []); 
+  }, []);
 
   return (
     //<div className="flex h-[600px] max-w-6xl mx-auto border rounded-lg overflow-hidden bg-gray-50">
@@ -119,15 +119,15 @@ export default function RoomList() {
     >
       {/* Sidebar */}
       <div className="w-64 bg-white border-r p-4">
-        <button onClick={navigateProfileSettings} className="w-full">
-          <div className="flex items-center justify-between mb-6">
+        <button onClick={navigateProfileSettings} className="w-full ">
+          <div className="flex items-center justify-between mb-6 bg-gray-200 px-2 py-2 rounded-full ">
             <div className="flex items-center">
               <div className="h-8 w-8 mr-2 bg-gray-300 rounded-full flex items-center justify-center">
                 <span className="text-white">U</span>
               </div>
-              <span className="font-semibold">User</span>
+              <span className="font-semibold text-gray-600">User</span>
             </div>
-            <ChevronDown size={20} />
+            <ChevronDown color="#4b5563" size={20} />
           </div>
         </button>
 
@@ -186,7 +186,7 @@ export default function RoomList() {
               
           </ul>
           */}
-          <div className="h-96 overflow-auto custom-scroll">
+          <div className="h-96 overflow-auto">
             <UserItemList users={users} />
           </div>
         </div>
@@ -247,34 +247,185 @@ export default function RoomList() {
           id="task-container"
           className="flex items-center w-full h-[80%] justify-evenly"
         >
-          <div className="bg-gray-300 bg-opacity-75 shadow-lg flex flex-col items-center p-3 w-[50vw] h-full rounded-xl mr-3 ml-3 overflow-auto">
-            <span className="font-bold text-gray-600 text-xl flex items-center justify-center">
+          <div className="bg-gray-300 bg-opacity-75 shadow-lg flex flex-col items-center p-3 w-[50vw] h-full rounded-xl mr-3 ml-3">
+            <span className="font-bold bg-gray-100 text-gray-800 bg-opacity-70 rounded-full px-3 py-0 mb-4 text-md flex items-center justify-center ">
               <CircleCheckBig size={20} className="mr-2" /> To do
             </span>
-            <TaskItem title="Nueva tarea" user="user1" />
-            <TaskItem />
-            <TaskItem />
-            <TaskItem />
+            <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
+              
+              <TaskItem
+                title="Desarrollo de la landing page"
+                user="Juan Perez"
+                etiqueta="Fácil"
+              />
+
+              <TaskItem
+                title="Revisión de código"
+                user="Maria Lopez"
+                etiqueta="Medio"
+              />
+              <TaskItem
+                title="Desarrollo de la landing page"
+                user="Juan Perez"
+                etiqueta="Fácil"
+              />
+
+              <TaskItem
+                title="Revisión de código"
+                user="Maria Lopez"
+                etiqueta="Medio"
+              />
+
+              <TaskItem
+                title="Diseño de logotipo"
+                user="Carlos Garcia"
+                etiqueta="Difícil"
+              />
+
+              <TaskItem
+                title="Documentación del proyecto"
+                user="Ana Rodriguez"
+                etiqueta="Fácil"
+              />
+
+              <TaskItem
+                title="Presentación a clientes"
+                user="David Sanchez"
+                etiqueta="Medio"
+              />
+
+              <TaskItem
+                title="Pruebas de usabilidad"
+                user="Sofia Fernandez"
+                etiqueta="Difícil"
+              />
+
+              <TaskItem
+                title="Implementación funciones"
+                user="Pedro Martinez"
+                etiqueta="Fácil"
+              />
+            </div>
           </div>
 
-          <div className="bg-gray-300 bg-opacity-75 shadow-lg flex flex-col items-center p-3 w-[50vw] h-full rounded-xl mr-3 ml-3 overflow-auto">
-            <span className="font-bold text-gray-600 text-xl flex items-center justify-center">
+          <div className=" bg-gray-300 bg-opacity-75 shadow-lg flex flex-col items-center p-3 w-[50vw] h-full rounded-xl mr-3 ml-3">
+            <span className="font-bold bg-orange-100 text-orange-800 bg-opacity-70 rounded-full px-3 py-0 mb-4 text-md flex items-center justify-center">
               <CircleCheckBig size={20} className="mr-2" /> In progress
             </span>
-            <TaskItem />
-            <TaskItem />
-            <TaskItem />
-            <TaskItem />
+            <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
+              <TaskItem
+                title="Desarrollo de la landing page"
+                user="Juan Perez"
+                etiqueta="Fácil"
+              />
+
+              <TaskItem
+                title="Revisión de código"
+                user="Maria Lopez"
+                etiqueta="Medio"
+              />
+              <TaskItem
+                title="Desarrollo de la landing page"
+                user="Juan Perez"
+                etiqueta="Fácil"
+              />
+
+              <TaskItem
+                title="Revisión de código"
+                user="Maria Lopez"
+                etiqueta="Medio"
+              />
+
+              <TaskItem
+                title="Diseño de logotipo"
+                user="Carlos Garcia"
+                etiqueta="Difícil"
+              />
+
+              <TaskItem
+                title="Documentación del proyecto"
+                user="Ana Rodriguez"
+                etiqueta="Fácil"
+              />
+
+              <TaskItem
+                title="Presentación a clientes"
+                user="David Sanchez"
+                etiqueta="Medio"
+              />
+
+              <TaskItem
+                title="Pruebas de usabilidad"
+                user="Sofia Fernandez"
+                etiqueta="Difícil"
+              />
+
+              <TaskItem
+                title="Implementación funciones"
+                user="Pedro Martinez"
+                etiqueta="Fácil"
+              />
+            </div>
           </div>
 
-          <div className="bg-gray-300 bg-opacity-75 shadow-lg flex flex-col items-center p-3 w-[50vw] h-full rounded-xl mr-3 ml-3 overflow-auto">
-            <span className="font-bold text-gray-600 text-xl flex items-center justify-center">
+          <div className="bg-gray-300 bg-opacity-75 shadow-lg flex flex-col items-center p-3 w-[50vw] h-full rounded-xl mr-3 ml-3">
+            <span className="font-bold bg-green-100 text-green-800 bg-opacity-70 rounded-full px-3 py-0 mb-4 text-md flex items-center justify-center">
               <CircleCheckBig size={20} className="mr-2" /> Done
             </span>
-            <TaskItem />
-            <TaskItem />
-            <TaskItem />
-            <TaskItem />
+            <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
+              <TaskItem
+                title="Desarrollo de la landing page"
+                user="Juan Perez"
+                etiqueta="Fácil"
+              />
+
+              <TaskItem
+                title="Revisión de código"
+                user="Maria Lopez"
+                etiqueta="Medio"
+              />
+              <TaskItem
+                title="Desarrollo de la landing page"
+                user="Juan Perez"
+                etiqueta="Fácil"
+              />
+
+              <TaskItem
+                title="Revisión de código"
+                user="Maria Lopez"
+                etiqueta="Medio"
+              />
+
+              <TaskItem
+                title="Diseño de logotipo"
+                user="Carlos Garcia"
+                etiqueta="Difícil"
+              />
+
+              <TaskItem
+                title="Documentación del proyecto"
+                user="Ana Rodriguez"
+                etiqueta="Fácil"
+              />
+
+              <TaskItem
+                title="Presentación a clientes"
+                user="David Sanchez"
+                etiqueta="Medio"
+              />
+
+              <TaskItem
+                title="Pruebas de usabilidad"
+                user="Sofia Fernandez"
+                etiqueta="Difícil"
+              />
+
+              <TaskItem
+                title="Implementación funciones"
+                user="Pedro Martinez"
+                etiqueta="Fácil"
+              />
+            </div>
           </div>
         </div>
       </div>
