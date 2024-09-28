@@ -1,51 +1,26 @@
-
-import { useState, useEffect } from 'react';
-import { EyeIcon, EyeOffIcon, LockIcon, MailIcon, UserIcon } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { EyeIcon, EyeOffIcon, LockIcon, MailIcon, UserIcon } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import PocketBase from 'pocketbase';
-import swal from 'sweetalert';
-
-const pb = new PocketBase('https://roomlist.pockethost.io');
 
 export default function AuthForm() {
-  const [activeTab, setActiveTab] = useState("login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const pb = new PocketBase('https://roomlist.pockethost.io');
+  const [showPassword, setShowPassword] = useState(false)
+  const [activeTab, setActiveTab] = useState("login")
+
+  // Estado para los datos del formulario de registro
+  const [registerData, setRegisterData] = useState({
+    name: "",
+    email: "",
+    password: ""
+  });
+
+  // Estado para manejar mensajes de éxito o error
+  const [registerMessage, setRegisterMessage] = useState("");
+
+  const togglePasswordVisibility = () => setShowPassword(!showPassword)
+
   const navigate = useNavigate();
-
-  // Mostrar/ocultar contraseña
-  const togglePasswordVisibility = () => setShowPassword(!showPassword);
-
-
-  // Comprobar si el token está en el localStorage al cargar la página
-  useEffect(() => {
-    const storedToken = localStorage.getItem('authToken');
-    if (storedToken) {
-      pb.authStore.loadFromCookie(storedToken);
-      if (pb.authStore.isValid) {
-        navigate('/create-join-room');
-      }
-    }
-  }, [navigate]);
-
-  const handleLogin = async () => {
-    try {
-      const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailFormat.test(email)) {
-        swal("Error", "Por favor ingresa un correo electrónico válido.", "warning");
-        return;
-      }
-      // Autenticación con PocketBase usando email y contraseña
-      const authData = await pb.collection('Usuarios').authWithPassword(email, password);
-      console.log("Usuario autenticado:", authData);
-      localStorage.setItem('authToken', pb.authStore.exportToCookie());
-      navigate('/create-join-room');
-    } catch (error) {
-      console.error("Error al iniciar sesión", error);
-      swal("Error al iniciar sesión", "Verifica tus credenciales", "error");
-    }
-  };
 
   const navigateCreateJoinRoom = () => {
     navigate('/create-join-room');
@@ -311,63 +286,10 @@ export default function AuthForm() {
           <div className="relative mb-4">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />
-
             </div>
-            {activeTab === "login" && (
-                <form onSubmit={(e) => e.preventDefault()}>
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <br />
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-
-                      <div className="relative">
-                        <MailIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-                        <input
-                            id="email"
-                            type="text"
-                            value={email}
-                            maxLength={100}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="usuario@ejemplo.com"
-                            className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña</label>
-
-                      <div className="relative">
-                        <LockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-                        <input
-                            id="password"
-                            type={showPassword ? "text" : "password"}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            maxLength={100}
-                            placeholder="••••••••"
-                            className="pl-10 pr-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                        <button
-                            type="button"
-                            className="pr-1 absolute right-1 top-1/2 transform -translate-y-1/2"
-                            onClick={togglePasswordVisibility}
-                        >
-                          {showPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                      onClick={handleLogin}
-                      className="w-full mt-6 bg-blue-500 text-white py-2 rounded-lg"
-                  >
-                    Iniciar Sesión
-                  </button>
-                </form>
-            )}
           </div>
         </div>
       </div>
-  );
+    </div>
+  )
 }
