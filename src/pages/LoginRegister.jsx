@@ -1,12 +1,47 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { EyeIcon, EyeOffIcon, LockIcon, MailIcon, UserIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import PocketBase from 'pocketbase';
+import swal from 'sweetalert';
 
 export default function AuthForm() {
   const pb = new PocketBase('https://roomlist.pockethost.io');
   const [showPassword, setShowPassword] = useState(false)
   const [activeTab, setActiveTab] = useState("login")
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+
+  // Comprobar si el token está en el localStorage al cargar la página
+  useEffect(() => {
+    const storedToken = localStorage.getItem('authToken');
+    if (storedToken) {
+      pb.authStore.loadFromCookie(storedToken);
+      if (pb.authStore.isValid) {
+        navigate('/create-join-room');
+      }
+    }
+  }, [navigate]);
+
+  const handleLogin = async () => {
+    try {
+      const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailFormat.test(email)) {
+        swal("Error", "Por favor ingresa un correo electrónico válido.", "warning");
+        return;
+      }
+      // Autenticación con PocketBase usando email y contraseña
+      const authData = await pb.collection('Usuarios').authWithPassword(email, password);
+      console.log("Usuario autenticado:", authData);
+      localStorage.setItem('authToken', pb.authStore.exportToCookie());
+      navigate('/create-join-room');
+    } catch (error) {
+      console.error("Error al iniciar sesión", error);
+      swal("Error al iniciar sesión", "Verifica tus credenciales", "error");
+    }
+  };
+
 
   const [registerData, setRegisterData] = useState({
     name: "",
@@ -17,8 +52,6 @@ export default function AuthForm() {
   const [registerMessage, setRegisterMessage] = useState("");
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword)
-
-  const navigate = useNavigate();
 
   const navigateCreateJoinRoom = () => {
     navigate('/create-join-room');
@@ -116,6 +149,7 @@ export default function AuthForm() {
         setRegisterMessage("Usuario registrado exitosamente.");
         console.log("Usuario registrado exitosamente:", record);
         
+
         setTimeout(() => {
           window.location.reload();
         }, 1000);
@@ -140,12 +174,12 @@ export default function AuthForm() {
         <div className="p-6">
           <div className="flex border-b border-gray-200">
             <button
-              className={`w-1/2 py-2 text-center ${activeTab === "login" ? "border-b-2 border-blue-500" : ""}`}
+              className={`w-1/2 py-2 text-center ${activeTab === "login" ? "border-b-2 border-[#4b5563]" : ""}`}
               onClick={() => setActiveTab("login")}>
               Iniciar Sesión
             </button>
             <button
-              className={`w-1/2 py-2 text-center ${activeTab === "register" ? "border-b-2 border-blue-500" : ""}`}
+              className={`w-1/2 py-2 text-center ${activeTab === "register" ? "border-b-2 border-[#4b5563]" : ""}`}
               onClick={() => setActiveTab("register")}
             >
               Registrarse
@@ -153,38 +187,56 @@ export default function AuthForm() {
           </div>
           {activeTab === "login" && (
             <form onSubmit={(e) => e.preventDefault()}>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <br />
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-                  <div className="relative">
-                    <MailIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-                    <input id="email" name="email" type="email" placeholder="usuario@ejemplo.com" className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                  </div>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <br />
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+
+                <div className="relative">
+                  <MailIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
+                  <input
+                      id="email"
+                      type="text"
+                      value={email}
+                      maxLength={100}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="usuario@ejemplo.com"
+                      className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
                 </div>
-                <div className="space-y-2">
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña</label>
-                  <div className="relative">
-                    <LockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-                    <input  
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña</label>
+
+                <div className="relative">
+                  <LockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
+                  <input
                       id="password"
-                      name="password"
                       type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      maxLength={100}
                       placeholder="••••••••"
                       className="pl-10 pr-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <button
+                  />
+                  <button
                       type="button"
                       className="pr-1 absolute right-1 top-1/2 transform -translate-y-1/2"
                       onClick={togglePasswordVisibility}
-                    >
-                      {showPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
-                    </button>
-                  </div>
+                  >
+                    {showPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
+                  </button>
                 </div>
               </div>
-              <button onClick={navigateCreateJoinRoom} className="w-full mt-6 bg-blue-500 text-white py-2 rounded-lg">Iniciar Sesión</button>
-            </form>
+            </div>
+
+            <button
+                onClick={handleLogin}
+                className="w-full mt-6 bg-[#4b5563] text-white py-2 rounded-lg"
+            >
+              Iniciar Sesión
+            </button>
+          </form>
           )}
           {activeTab === "register" && (
             <form onSubmit={handleRegisterSubmit}>
@@ -194,6 +246,7 @@ export default function AuthForm() {
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre de Usuario (sin espacios)</label>
                   <div className="relative">
                     <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
+
                     <input 
                       id="name" 
                       name="name"
@@ -202,12 +255,14 @@ export default function AuthForm() {
                       placeholder="JuanRamirez" 
                       className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" 
                     />
+
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="email-register" className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
                   <div className="relative">
                     <MailIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
+
                     <input 
                       id="email-register" 
                       name="email"
@@ -217,6 +272,7 @@ export default function AuthForm() {
                       placeholder="usuario@ejemplo.com" 
                       className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" 
                     />
+
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -231,6 +287,7 @@ export default function AuthForm() {
                       type={showPassword ? "text" : "password"} 
                       placeholder="••••••••" 
                       className="pl-10 pr-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+
                     />
                     <button
                       type="button"
@@ -243,6 +300,7 @@ export default function AuthForm() {
                 </div>
               </div>
               <button type="submit" className="w-full mt-6 bg-blue-500 text-white py-2 rounded-lg">Registrarse</button>
+
             </form>
           )}
 
