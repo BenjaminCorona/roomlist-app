@@ -2,3 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Aumentamos la especificidad con .custom-scroll */
+.custom-scroll {
+    scroll-behavior: smooth !important;
+  }
+  
+  /* WebKit browsers (Chrome, Safari, Edge) */
+  .custom-scroll::-webkit-scrollbar {
+    width: 12px !important; /* Aumenté el ancho para que sea más visible */
+  }
+  
+  .custom-scroll::-webkit-scrollbar-button {
+    display: none !important; /* Oculta las flechas del scrollbar */
+  }
+  
+  .custom-scroll::-webkit-scrollbar-track {
+    background: #e0e0e0 !important; /* Color del track (fondo) */
+    border-radius: 10px !important;
+  }
+  
+  .custom-scroll::-webkit-scrollbar-thumb {
+    background-color: #909090 !important; /* Color del thumb (scroll) */
+    border-radius: 10px !important;
+    border: 2px solid #e0e0e0 !important; /* Borde alrededor del thumb */
+  }
+  
+  .custom-scroll:hover::-webkit-scrollbar-thumb {
+    background-color: #606060 !important; /* Color al hacer hover en el scroll */
+  }
+  
+  .custom-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: #404040 !important; /* Color al hacer hover en el thumb */
+  }
+  
+  /* Firefox */
+  .custom-scroll {
+    scrollbar-width: thin !important;             /* Grosor más delgado */
+    scrollbar-color: #909090 #e0e0e0 !important;  /* Color del thumb y el track */
+  }
+  
+  .custom-scroll:hover {
+    scrollbar-color: #606060 #e0e0e0 !important;  /* Color al hacer hover */
+  }
+  
+  /* Para navegadores antiguos como IE y Edge Legacy */
+  @supports (-ms-overflow-style: none) {
+    .custom-scroll {
+      -ms-overflow-style: -ms-autohiding-scrollbar !important; /* Scroll oculto cuando no está en uso */
+    }
+  }
+  
+  /* Otros navegadores que usan prefijo -webkit- */
+  @supports (-webkit-overflow-scrolling: touch) {
+    .custom-scroll {
+      -webkit-overflow-scrolling: touch !important; /* Desplazamiento suave en móviles */
+    }
+  }
+  

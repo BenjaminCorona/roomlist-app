@@ -3,6 +3,7 @@ import CardTask from "../components/CardTask";
 import TaskItem from "../components/TaskItem";
 import UserItemList from "../components/UserItemList";
 import AddNewTask from "./AddNewTask";
+import '../index.css'
 import {
   Bell,
   Inbox,
@@ -121,15 +122,15 @@ export default function RoomList() {
         
         <button
             onClick={toggleAddNewTaskModal}
-            className="w-full mb-4 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded flex items-center">
+            className="w-full mb-4 bg-[#4b5563] hover:bg-gray-700 text-white py-2 px-4 rounded flex items-center">
           <Plus size={16} className="mr-2" /> Añadir tarea
         </button>
         {isAddNewTaskModalOpen && <AddNewTask toggle={toggleAddNewTaskModal} />}
         <div className="space-y-2">
-          <button className="w-full justify-start py-2 px-4 rounded flex items-center bg-orange-100 hover:bg-gray-100">
+          <button className="w-full justify-start py-2 px-4 rounded flex items-center bg-gray-200 hover:bg-gray-300">
             <Home size={16} className="mr-2" /> Inicio
           </button>
-          <button onClick={navigateHistory} className="w-full justify-start py-2 px-4 rounded flex items-center hover:bg-gray-100">
+          <button onClick={navigateHistory} className="w-full justify-start py-2 px-4 rounded flex items-center hover:bg-gray-300">
             <History size={16} className="mr-2" /> Historial
           </button>
           {/** 
@@ -171,12 +172,10 @@ export default function RoomList() {
               
           </ul>
           */}
-          
-          <div className=" h-96 overflow-auto">
-          <UserItemList users={users} />
-            
+<div className="h-96 overflow-auto custom-scroll">
+  <UserItemList users={users} />
+</div>
 
-          </div>
         </div>
       </div>
 
