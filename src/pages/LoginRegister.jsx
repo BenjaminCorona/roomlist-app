@@ -255,7 +255,7 @@ export default function AuthForm() {
 
             <button
                 onClick={handleLogin}
-                className="w-full mt-6 bg-blue-500 text-white py-2 rounded-lg"
+                className="w-full mt-6 bg-[#4b5563] text-white py-2 rounded-lg"
             >
               Iniciar Sesión
             </button>
