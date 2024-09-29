@@ -8,10 +8,10 @@ export default function AuthForm() {
   const pb = new PocketBase('https://roomlist.pockethost.io');
   const [showPassword, setShowPassword] = useState(false)
   const [activeTab, setActiveTab] = useState("login")
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  
+  const navigate = useNavigate();
 
   // Comprobar si el token está en el localStorage al cargar la página
   useEffect(() => {

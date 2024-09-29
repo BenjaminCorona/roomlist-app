@@ -1,14 +1,17 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { LogOut, Save } from "lucide-react"
 import { useNavigate } from "react-router-dom";
+import PocketBase from 'pocketbase';
 
 
 export default function ProfileSettings() {
+  const pb = new PocketBase('https://roomlist.pockethost.io');
   const [username, setUsername] = useState("ethan")
   const [email, setEmail] = useState("ethan@ejemplo.com")
   const [currentPassword, setCurrentPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+
 
   const handleSave = (e) => {
     e.preventDefault()
@@ -32,9 +35,22 @@ export default function ProfileSettings() {
     navigate('/room-list')
   }
 
+  
   const navigateLoginRegister = () => {
     navigate('/')
   }
+
+    // Comprobar si el token está en el localStorage al cargar la página si no, se manda a login
+    useEffect(() => {
+      const storedToken = localStorage.getItem('authToken');
+      if (!(storedToken)) {
+        pb.authStore.loadFromCookie(storedToken);
+        if (!(pb.authStore.isValid)) {
+          navigate('/');
+        }
+      }
+    }, [navigate]);
+  
 
   return (
     <div className="max-w-2xl mx-auto p-4 space-y-6">

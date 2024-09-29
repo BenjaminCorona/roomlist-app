@@ -1,5 +1,7 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
+import { useNavigate } from "react-router-dom";
+import PocketBase from 'pocketbase';
 
 // Datos de ejemplo
 const activityData = [
@@ -71,7 +73,21 @@ const taskVariants= {
 }
 
 export default function History() {
+  const pb = new PocketBase('https://roomlist.pockethost.io');
+  const navigate = useNavigate();
+
   const [filter, setFilter] = useState("Toda la actividad")
+
+    // Comprobar si el token está en el localStorage al cargar la página si no, se manda a login
+    useEffect(() => {
+      const storedToken = localStorage.getItem("authToken");
+      if (!storedToken) {
+        pb.authStore.loadFromCookie(storedToken);
+        if (!pb.authStore.isValid) {
+          navigate("/");
+        }
+      }
+    }, [navigate]);
 
   return (
     <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow">
