@@ -13,6 +13,8 @@ export default function ProfileSettings() {
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   
+  // Gestiona el mensaje de error relacionado con la longitud de la contraseña.
+  const [passwordError, setPasswordError] = useState("");
   
   const navigate = useNavigate();
   
@@ -69,6 +71,15 @@ export default function ProfileSettings() {
   // Actualizar el perfil del usuario (contraseña )
   const handleSave = async (e) => {
     e.preventDefault();
+
+    // Limpiar el mensaje de error al intentar guardar
+  setPasswordError("");
+
+  // Validar longitud de la nueva contraseña
+  if (newPassword && (newPassword.length < 8 || newPassword.length > 32)) {
+    setPasswordError("La contraseña debe tener entre 8 y 32 caracteres.");
+    return;
+  }
 
     // Validar contraseñas
     if (newPassword && newPassword !== confirmPassword) {
@@ -190,6 +201,11 @@ export default function ProfileSettings() {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
           />
+          {/* Mostrar el mensaje de error debajo del input de nueva contraseña */}
+            {passwordError && (
+              <p className="text-red-500 text-sm">{passwordError}</p>
+            )}
+
         </div>
         <div className="space-y-2">
           <Label htmlFor="confirm-password">Confirmar Nueva Contraseña</Label>
