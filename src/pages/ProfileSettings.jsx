@@ -25,6 +25,18 @@ export default function ProfileSettings() {
     navigate('/')
   }
 
+     // Comprobar si el token está en el localStorage al cargar la página si no, se manda a login
+     useEffect(() => {
+      const storedToken = localStorage.getItem('authToken');
+      if (!(storedToken)) {
+        pb.authStore.loadFromCookie(storedToken);
+        if (!(pb.authStore.isValid)) {
+          navigate('/');
+        }
+      }
+    }, [navigate]);
+  
+
 
   // Cargar los datos del usuario autenticado al montar el componente
   useEffect(() => {
@@ -43,13 +55,6 @@ export default function ProfileSettings() {
     fetchUserProfile();
   }, [navigate]);
 
-
-  // Validar email
-  const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
   // Funcion para verificar la contraseña actual
   const verifyCurrentPassword = async () => {
     try {
@@ -61,21 +66,9 @@ export default function ProfileSettings() {
     }
   };
 
-  // Actualizar el perfil del usuario (contraseña, nombre*, email* )
+  // Actualizar el perfil del usuario (contraseña )
   const handleSave = async (e) => {
     e.preventDefault();
-
-    // Validar correo electrónico
-    if (!isValidEmail(email)) {
-      swal("Error", "El correo electrónico no es válido.", "warning");
-      return;
-    }
-
-    // Validar nombre de usuario
-    if (!username) {
-      swal("Error", "El nombre de usuario no puede estar vacío.", "warning");
-      return;
-    }
 
     // Validar contraseñas
     if (newPassword && newPassword !== confirmPassword) {
@@ -87,42 +80,43 @@ export default function ProfileSettings() {
     if (newPassword) {
       const isCurrentPasswordValid = await verifyCurrentPassword();
       if (!isCurrentPasswordValid) return;
-    }
 
-    try {
-      const updatedData = { username, email };
+      try {
 
-      // Si se ingresa una nueva contraseña, incluirla en la actualización
-      if (newPassword) {
-        updatedData.password = newPassword;
-        updatedData.passwordConfirm = confirmPassword;
+        const userId = pb.authStore.model?.id;
+        const data = {
+  
+          "password": newPassword,
+          "passwordConfirm": confirmPassword  ,
+          "oldPassword": currentPassword
+  
+        };
+  
+        // Actualizar el perfil del usuario en PocketBase
+        const record = await pb.collection('Usuarios').update(userId, data);
+        if (record) {
+        swal({
+          title: "Perfil actualizado",
+          text: "Los cambios se han guardado correctamente.",
+          icon: "success",
+          confirmButtonText: "Aceptar",
+        });
+  
+        // Redirigir al inicio de sesión después de la actualización 
+        navigateRoomList();
       }
-
-      // Actualizar el perfil del usuario en PocketBase
-      const updatedUser = await pb.collection('Usuarios').update(pb.authStore.model.id, updatedData);
-
-      // Actualizar estado local con los nuevos datos en caso de permanecer en la misma pagina
-      setUsername(updatedUser.username);
-      setEmail(updatedUser.email);
-
-      swal({
-        title: "Perfil actualizado",
-        text: "Los cambios se han guardado correctamente.",
-        icon: "success",
-        confirmButtonText: "Aceptar",
-      });
-
-      // Redirigir al inicio de sesión después de la actualización 
-      navigateLoginRegister();
-    } catch (error) { // manejo de errores al actualizar
-      console.error("Error al actualizar el perfil", error);
-      swal({
-        title: "Error",
-        text: "Ocurrió un error al actualizar el perfil.",
-        icon: "error",
-        confirmButtonText: "Aceptar",
-      });
+      } catch (error) { // manejo de errores al actualizar
+        console.error("Error al actualizar el perfil", error);
+        swal({
+          title: "Error",
+          text: "Ocurrió un error al actualizar el perfil.",
+          icon: "error",
+          confirmButtonText: "Aceptar",
+        });
+      }
     }
+
+    
   };
 
 
