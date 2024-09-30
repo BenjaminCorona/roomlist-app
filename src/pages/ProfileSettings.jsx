@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import PocketBase from 'pocketbase';
 import swal from 'sweetalert';
 
+
 const pb = new PocketBase('https://roomlist.pockethost.io');
 
 export default function ProfileSettings() {
+
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [currentPassword, setCurrentPassword] = useState("")
@@ -16,6 +18,7 @@ export default function ProfileSettings() {
   // Gestiona el mensaje de error relacionado con la longitud de la contraseña.
   const [passwordError, setPasswordError] = useState("");
   
+
   const navigate = useNavigate();
   
   //Funciones de navegacion
@@ -23,12 +26,13 @@ export default function ProfileSettings() {
     navigate('/room-list')
   }
 
+  
   const navigateLoginRegister = () => {
     navigate('/')
   }
 
-     // Comprobar si el token está en el localStorage al cargar la página si no, se manda a login
      useEffect(() => {
+
       const storedToken = localStorage.getItem('authToken');
       if (!(storedToken)) {
         pb.authStore.loadFromCookie(storedToken);
@@ -38,7 +42,6 @@ export default function ProfileSettings() {
       }
     }, [navigate]);
   
-
 
   // Cargar los datos del usuario autenticado al montar el componente
   useEffect(() => {
@@ -160,7 +163,6 @@ export default function ProfileSettings() {
       })
     }
   }
-
   return (
     <div className="max-w-2xl mx-auto p-4 space-y-6">
       <h1 className="text-2xl font-bold">Configuración del Perfil</h1>

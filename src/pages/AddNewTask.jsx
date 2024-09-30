@@ -27,7 +27,7 @@ export default function AddNewTask({toggle}) {
           />
 
           <div className="mb-4">
-            <h3 className="font-semibold mb-2">Descripcíon</h3>
+            <h3 className="font-semibold mb-2">Descripción</h3>
             <textarea
                 placeholder="Descripción de la tarea"
                 className="w-full p-2 border border-gray-300 rounded min-h-[100px] resize-y"

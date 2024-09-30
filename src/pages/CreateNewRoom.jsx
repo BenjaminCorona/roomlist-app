@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PlusCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import PocketBase from 'pocketbase';
 
 export default function CreateNewRoom() {
+  const pb = new PocketBase('https://roomlist.pockethost.io');
+  
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [message, setMessage] = useState({
@@ -37,6 +40,17 @@ export default function CreateNewRoom() {
   const navigateRoomList = () => {
     navigate('/room-list')
   }
+
+  // Comprobar si el token está en el localStorage al cargar la página si no, se manda a login
+  useEffect(() => {
+    const storedToken = localStorage.getItem("authToken");
+    if (!storedToken) {
+      pb.authStore.loadFromCookie(storedToken);
+      if (!pb.authStore.isValid) {
+        navigate("/");
+      }
+    }
+  }, [navigate]);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-100 to-purple-100 p-4">
@@ -74,7 +88,7 @@ export default function CreateNewRoom() {
           <button
           onClick={navigateRoomList}
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded flex items-center justify-center"
+            className="w-full bg-[#4b5563] text-white py-2 rounded flex items-center justify-center"
           >
             <PlusCircle className="mr-2 h-5 w-5" />
             Crear Sala
