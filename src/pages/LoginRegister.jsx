@@ -155,7 +155,7 @@ export default function AuthForm() {
         }, 1000);
       }
     } catch (error) {
-      setRegisterMessage("Error al registrar el usuario. El correo electronico ya está en uso.");
+      setRegisterMessage("Error al registrar el usuario. El usuario no es válido.");
       console.error("Error al registrar el usuario:", error);
     }
     
