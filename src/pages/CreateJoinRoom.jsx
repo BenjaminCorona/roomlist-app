@@ -1,9 +1,12 @@
 import { ArrowLeft, Plus } from "lucide-react"
 import React from "react"
 import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react";
+import PocketBase from 'pocketbase';
 
 
 export default function CreateJoinRoom() {
+  const pb = new PocketBase('https://roomlist.pockethost.io');
   const navigate = useNavigate();
 
   const navigateRoomList = () => {
@@ -13,6 +16,17 @@ export default function CreateJoinRoom() {
   const navigateCreateNewRoom = () => {
     navigate('/create-new-room');
   } 
+
+  // Comprobar si el token está en el localStorage al cargar la página si no, se manda a login
+  useEffect(() => {
+    const storedToken = localStorage.getItem("authToken");
+    if (!storedToken) {
+      pb.authStore.loadFromCookie(storedToken);
+      if (!pb.authStore.isValid) {
+        navigate("/");
+      }
+    }
+  }, [navigate]);
 
   return (
     <div className="flex h-screen bg-[#ffffff] p-6">

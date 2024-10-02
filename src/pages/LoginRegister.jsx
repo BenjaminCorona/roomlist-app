@@ -12,6 +12,7 @@ export default function AuthForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+
   // Comprobar si el token está en el localStorage al cargar la página
   useEffect(() => {
     const storedToken = localStorage.getItem('authToken');
@@ -300,14 +301,9 @@ export default function AuthForm() {
                   </button>
                 </div>
               </div>
-              
-              
-              <button
-                type="submit"
-                className="w-full py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg"
-              >
-                Registrarse
-              </button>
+
+              <button type="submit" className="w-full mt-6 bg-gray-600 text-white py-2 rounded-lg">Registrarse</button>
+
             </form>
           )}
 
