@@ -6,12 +6,12 @@ import swal from 'sweetalert';
 
 export default function AuthForm() {
   const pb = new PocketBase('https://roomlist.pockethost.io');
-  const [showPassword, setShowPassword] = useState(false)
-  const [activeTab, setActiveTab] = useState("login")
+  const [showPassword, setShowPassword] = useState(false);
+  const [activeTab, setActiveTab] = useState("login");
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
-  const navigate = useNavigate();
+
 
   // Comprobar si el token está en el localStorage al cargar la página
   useEffect(() => {
@@ -42,7 +42,6 @@ export default function AuthForm() {
     }
   };
 
-
   const [registerData, setRegisterData] = useState({
     name: "",
     email: "",
@@ -51,11 +50,7 @@ export default function AuthForm() {
 
   const [registerMessage, setRegisterMessage] = useState("");
 
-  const togglePasswordVisibility = () => setShowPassword(!showPassword)
-
-  const navigateCreateJoinRoom = () => {
-    navigate('/create-join-room');
-  }
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const handleRegisterChange = (e) => {
     const { name, value } = e.target;
@@ -95,17 +90,26 @@ export default function AuthForm() {
       if (usernameExists) {
         return "El nombre de usuario ya está en uso.";
       }
+    } catch (error) {
+      if (error.status !== 404) {
+        console.error("Error al verificar el nombre de usuario:", error);
+        return "Error al verificar el nombre de usuario.";
+      }
+    }
 
+    try {
       const emailExists = await pb.collection('Usuarios').getFirstListItem(`email="${registerData.email}"`);
       if (emailExists) {
         return "El correo electrónico ya está registrado.";
       }
-
-      return "";
     } catch (error) {
-      console.error("Error al verificar usuario o correo:", error);
-      return "";
+      if (error.status !== 404) {
+        console.error("Error al verificar el correo electrónico:", error);
+        return "Error al verificar el correo electrónico.";
+      }
     }
+
+    return ""; // No hubo errores, puede proceder al registro
   };
 
   const handleRegisterSubmit = async (e) => {
@@ -149,19 +153,18 @@ export default function AuthForm() {
         setRegisterMessage("Usuario registrado exitosamente.");
         console.log("Usuario registrado exitosamente:", record);
         
+        
+
+
 
         setTimeout(() => {
           window.location.reload();
         }, 1000);
       }
     } catch (error) {
-      setRegisterMessage("Error al registrar el usuario. El correo electronico ya está en uso.");
+      setRegisterMessage("Error al registrar el usuario. El nombre de usuario no es válido.");
       console.error("Error al registrar el usuario:", error);
     }
-    
-    console.log(registerData.email);
-    console.log(registerData.name);
-    console.log(registerData.password);
   };
 
   return (
@@ -228,77 +231,77 @@ export default function AuthForm() {
                   </button>
                 </div>
               </div>
+              <button
+                  onClick={handleLogin}
+                  className="w-full py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg"
+              >
+                Iniciar Sesión
+              </button>
             </div>
-
-            <button
-                onClick={handleLogin}
-                className="w-full mt-6 bg-[#4b5563] text-white py-2 rounded-lg"
-            >
-              Iniciar Sesión
-            </button>
-          </form>
+            </form>
           )}
+
           {activeTab === "register" && (
-            <form onSubmit={handleRegisterSubmit}>
-              <div className="space-y-4">
+            <form onSubmit={handleRegisterSubmit} className="space-y-4">
+              <div className="space-y-2">
                 <br />
-                <div className="space-y-2">
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre de Usuario (sin espacios)</label>
-                  <div className="relative">
-                    <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-
-                    <input 
-                      id="name" 
-                      name="name"
-                      value={registerData.name}
-                      onChange={handleRegisterChange}
-                      placeholder="JuanRamirez" 
-                      className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                    />
-
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="email-register" className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-                  <div className="relative">
-                    <MailIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-
-                    <input 
-                      id="email-register" 
-                      name="email"
-                      value={registerData.email}
-                      onChange={handleRegisterChange}
-                      type="email" 
-                      placeholder="usuario@ejemplo.com" 
-                      className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                    />
-
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="password-register" className="block text-sm font-medium text-gray-700">Contraseña</label>
-                  <div className="relative">
-                    <LockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-                    <input 
-                      id="password-register" 
-                      name="password"
-                      value={registerData.password}
-                      onChange={handleRegisterChange}
-                      type={showPassword ? "text" : "password"} 
-                      placeholder="••••••••" 
-                      className="pl-10 pr-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-
-                    />
-                    <button
-                      type="button"
-                      className="pr-1 absolute right-1 top-1/2 transform -translate-y-1/2"
-                      onClick={togglePasswordVisibility}
-                    >
-                      {showPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
-                    </button>
-                  </div>
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700">Nombre de Usuario</label>
+                <div className="relative">
+                  <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
+                  <input
+                    id="name"
+                    type="text"
+                    name="name"
+                    value={registerData.name}
+                    onChange={handleRegisterChange}
+                    maxLength={32}
+                    placeholder="Tu nombre de usuario"
+                    className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
                 </div>
               </div>
+
+              <div className="space-y-2">
+                <label htmlFor="register-email" className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                <div className="relative">
+                  <MailIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
+                  <input
+                    id="register-email"
+                    type="text"
+                    name="email"
+                    value={registerData.email}
+                    onChange={handleRegisterChange}
+                    maxLength={255}
+                    placeholder="usuario@ejemplo.com"
+                    className="pl-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="register-password" className="block text-sm font-medium text-gray-700">Contraseña</label>
+                <div className="relative">
+                  <LockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
+                  <input
+                    id="register-password"
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={registerData.password}
+                    onChange={handleRegisterChange}
+                    maxLength={32}
+                    placeholder="••••••••"
+                    className="pl-10 pr-10 w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    type="button"
+                    className="pr-1 absolute right-1 top-1/2 transform -translate-y-1/2"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
+                  </button>
+                </div>
+              </div>
+
               <button type="submit" className="w-full mt-6 bg-gray-600 text-white py-2 rounded-lg">Registrarse</button>
 
             </form>
@@ -312,5 +315,5 @@ export default function AuthForm() {
         </div>
       </div>
     </div>
-  )
+  );
 }
