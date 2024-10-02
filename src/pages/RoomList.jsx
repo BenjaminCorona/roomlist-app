@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import CardTask from "../components/CardTask";
 import TaskItem from "../components/TaskItem";
 import UserItemList from "../components/UserItemList";
 import AddNewTask from "./AddNewTask";
@@ -20,8 +19,10 @@ import {
   HistoryIcon,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import PocketBase from 'pocketbase';
 
 export default function RoomList() {
+  const pb = new PocketBase('https://roomlist.pockethost.io');
   /** 
   const [tasks, setTasks] = useState([
     {
@@ -110,6 +111,17 @@ export default function RoomList() {
     // Actualizar el estado con la ruta de la imagen aleatoria
     setBackgroundImage(`/bg-roomlist/bg${randomNumber}.jpg`);
   }, []);
+
+  // Comprobar si el token está en el localStorage al cargar la página si no, se manda a login
+  useEffect(() => {
+    const storedToken = localStorage.getItem("authToken");
+    if (!storedToken) {
+      pb.authStore.loadFromCookie(storedToken);
+      if (!pb.authStore.isValid) {
+        navigate("/");
+      }
+    }
+  }, [navigate]);
 
   return (
     //<div className="flex h-[600px] max-w-6xl mx-auto border rounded-lg overflow-hidden bg-gray-50">
