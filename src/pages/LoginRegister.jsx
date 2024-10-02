@@ -233,7 +233,7 @@ export default function AuthForm() {
               </div>
               <button
                   onClick={handleLogin}
-                  className="w-full py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg"
+                  className="w-full py-2 text-white bg-gray-600 hover:bg-gray-700 rounded-lg"
               >
                 Iniciar Sesión
               </button>
@@ -302,7 +302,7 @@ export default function AuthForm() {
                 </div>
               </div>
 
-              <button type="submit" className="w-full mt-6 bg-gray-600 text-white py-2 rounded-lg">Registrarse</button>
+              <button type="submit" className="w-full mt-6 bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg">Registrarse</button>
 
             </form>
           )}
