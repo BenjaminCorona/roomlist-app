@@ -9,6 +9,7 @@ import CreateNewRoom from "./pages/CreateNewRoom";
 import AddNewTask from "./pages/AddNewTask";
 import RoomList from "./pages/RoomList";
 import ViewTask from "./pages/ViewTask";
+import ProfileSettings2 from "./pages/ProfileSettings2";
 
 function App() {
   // Estado para controlar la visibilidad del modal de AddNewTask
@@ -37,6 +38,7 @@ function App() {
           <Route path="/profile-settings" element={<ProfileSettings/>}/>
           <Route path="/create-new-room" element={<CreateNewRoom/>}/>
           <Route path="/room-list" element={<RoomList/>}/>
+          <Route path="/profile-settings2" element = {<ProfileSettings2/>}/>
         </Routes>
     </BrowserRouter>
 

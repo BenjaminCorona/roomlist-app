@@ -1,0 +1,20 @@
+/* Toggle switch styles */
+.toggle-checkbox:checked {
+    right: 0;
+    border-color: #4A5568;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+    background-color: #4A5568;
+}
+
+.toggle-checkbox {
+    right: 4px;
+    top: 4px;
+    transition: all 0.3s ease-in-out;
+}
+
+.toggle-label {
+    width: 36px;
+    height: 20px;
+}
