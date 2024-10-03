@@ -279,7 +279,7 @@ export default function AuthForm() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="register-password" className="block text-sm font-medium text-gray-700">Contraseña</label>
+                <label htmlFor="register-password" className="block text-sm font-medium text-gray-700">Contraseña (Mínimo 8 caracteres)</label>
                 <div className="relative">
                   <LockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
                   <input
