@@ -3,15 +3,13 @@ import React from "react"
 import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react";
 import PocketBase from 'pocketbase';
+import swal from 'sweetalert';
 
 
 export default function CreateJoinRoom() {
   const pb = new PocketBase('https://roomlist.pockethost.io');
   const navigate = useNavigate();
-
-  const navigateRoomList = () => {
-    navigate('/room-list')
-  }
+  const [codigoSala, setCodigoSala] = useState(""); // Estado para almacenar el valor del input
 
   const navigateCreateNewRoom = () => {
     navigate('/create-new-room');
@@ -28,6 +26,25 @@ export default function CreateJoinRoom() {
     }
   }, [navigate]);
 
+  //Función para buscar la sala en pocketbase por el código ingresado
+  const handleJoinRoom = async () => {
+    try{
+      //Buscar la sala la colección
+      const resultList = await pb.collection('Salas').getList(1, 1, {
+        filter: `Codigo_Sala="${codigoSala}"`
+      });
+
+      if(resultList && resultList.items.length > 0){
+        navigate(`/room-list/${codigoSala}`);
+      }else{
+        swal("Error!", "No existe ningúna sala con el código proporcionado", "error");
+      }
+    }catch (error){
+      console.error(error);
+      swal("Error!", "Ocurrió un error al intentar unirse a la sala:", "error");
+    }
+  }
+
   return (
     <div className="flex h-screen bg-[#ffffff] p-6">
       <div className="w-full max-w-3xl mx-auto bg-white rounded-3xl overflow-hidden flex">
@@ -36,11 +53,24 @@ export default function CreateJoinRoom() {
           {/* Main content */}
           <main>
             <h1 className="text-2xl font-bold mb-2">Ingresar a Sala</h1>
+
             <div className="relative">
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-                    <input id="name" placeholder="Código de Sala" className="pl-3 w-1/2 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#4b5563]" />
-                    <button onClick={navigateRoomList} className="w-1/4 mt-6 ml-6 bg-[#4b5563] text-white py-2 rounded-lg">Unirse</button>
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
+
+              {/*Input donde se va a recuperar el código de la sala ingresado por el usuario*/}
+              <input id="codigo_sala"
+                     placeholder="Código de Sala"
+                     className="pl-3 w-1/2 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#4b5563]"
+                     value={codigoSala}
+                     onChange={(e) => setCodigoSala(e.target.value)}
+              />
+
+              {/*Boton que va comprobar el codigo del input para entrar a la sala*/}
+              <button className="w-1/4 mt-6 ml-6 bg-[#4b5563] text-white py-2 rounded-lg" onClick={handleJoinRoom}>Unirse
+              </button>
+
             </div>
+
             <div className="relative">
             <button onClick={navigateCreateNewRoom} className="w-1/4 mt-6 bg-[#4b5563] text-white py-2 rounded-lg">Crear Sala</button>
             </div>
@@ -55,7 +85,7 @@ export default function CreateJoinRoom() {
                 members={18}
                 icon="1"
                 iconBg="bg-gray-900"
-                clickEvent={navigateRoomList}
+                // clickEvent={navigateRoomList}
               />
               <WorkspaceOption
                 name="Sala 2"
@@ -63,7 +93,7 @@ export default function CreateJoinRoom() {
                 icon="2"
                 iconBg="bg-purple-200"
                 iconColor="text-purple-600"
-                clickEvent={navigateRoomList}
+                //clickEvent={navigateRoomList}
               />
             </div>
           </main>
