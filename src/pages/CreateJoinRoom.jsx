@@ -1,23 +1,24 @@
-import { ArrowLeft, Plus } from "lucide-react"
-import React from "react"
-import { useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react";
+import { ArrowLeft, Plus } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import PocketBase from 'pocketbase';
 
+import swal from 'sweetalert2';
 
 export default function CreateJoinRoom() {
   const pb = new PocketBase('https://roomlist.pockethost.io');
   const navigate = useNavigate();
+  const [roomCode, setRoomCode] = useState('');
 
   const navigateRoomList = () => {
-    navigate('/room-list')
-  }
+    navigate('/room-list');
+  };
 
   const navigateCreateNewRoom = () => {
     navigate('/create-new-room');
-  } 
+  };
 
-  // Comprobar si el token está en el localStorage al cargar la página si no, se manda a login
+  // Comprobar si el token está en el localStorage al cargar la página, si no, se manda a login
   useEffect(() => {
     const storedToken = localStorage.getItem("authToken");
     if (!storedToken) {
@@ -28,6 +29,46 @@ export default function CreateJoinRoom() {
     }
   }, [navigate]);
 
+  // Función para unirse a una sala o validar su existencia
+  const joinRoom = async () => {
+    if (roomCode.trim() === '') {
+      swal.fire('Error', 'Por favor ingrese un código de sala.', 'error');
+      return;
+    }
+
+    try {
+      // Cambiado para la colección "Salas" y el campo "Codigo_Sala"
+      const result = await pb.collection('Salas').getFirstListItem(`Codigo_Sala="${roomCode}"`);
+
+      // Si existe la sala, preguntamos al usuario si quiere unirse
+      swal.fire({
+        title: `Sala encontrada: ${result.Nombre_Sala}`,
+        text: '¿Quieres unirte a esta sala?',
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonText: 'Unirse',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+          actions: 'my-actions',
+        }
+        
+        
+      }).then((willJoin) => {
+        if (willJoin.isConfirmed) {
+          // Navegar a la lista de salas o ejecutar otra acción
+          navigateRoomList();
+        } else if (willJoin.dismiss === swal.DismissReason.cancel) {
+          // Si el usuario cancela, regresar a la interfaz de CreateJoinRoom
+          navigate('/create-join-room');  // Cambia esto según la ruta correcta
+        }
+      });
+    } catch (error) {
+      // Si no se encuentra el código de sala
+      swal.fire('Error', 'El código de sala no existe.', 'error');
+    }
+  };
+  
+
   return (
     <div className="flex h-screen bg-[#ffffff] p-6">
       <div className="w-full max-w-3xl mx-auto bg-white rounded-3xl overflow-hidden flex">
@@ -37,12 +78,31 @@ export default function CreateJoinRoom() {
           <main>
             <h1 className="text-2xl font-bold mb-2">Ingresar a Sala</h1>
             <div className="relative">
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
-                    <input id="name" placeholder="Código de Sala" className="pl-3 w-1/2 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#4b5563]" />
-                    <button onClick={navigateRoomList} className="w-1/4 mt-6 ml-6 bg-[#4b5563] text-white py-2 rounded-lg">Unirse</button>
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
+              <input
+                id="name"
+                value={roomCode}
+                onChange={(e) => setRoomCode(e.target.value)}
+                placeholder="Código de Sala"
+                className="pl-3 w-1/2 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#4b5563]"
+              />
+              <button
+                onClick={() => {
+                  console.log("Código de Sala ingresado:", roomCode); // Imprimir en la consola el código
+                  joinRoom();
+                }}
+                className="w-1/4 mt-6 ml-6 bg-[#4b5563] text-white py-2 rounded-lg"
+              >
+                Unirse
+              </button>
             </div>
             <div className="relative">
-            <button onClick={navigateCreateNewRoom} className="w-1/4 mt-6 bg-[#4b5563] text-white py-2 rounded-lg">Crear Sala</button>
+              <button
+                onClick={navigateCreateNewRoom}
+                className="w-1/4 mt-6 bg-[#4b5563] text-white py-2 rounded-lg"
+              >
+                Crear Sala
+              </button>
             </div>
             <br />
             <br />
@@ -77,7 +137,7 @@ export default function CreateJoinRoom() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function WorkspaceOption({ name, members, icon, iconBg, iconColor = "text-white", clickEvent }) {
@@ -92,9 +152,13 @@ function WorkspaceOption({ name, members, icon, iconBg, iconColor = "text-white"
           <p className="text-sm text-gray-500">{members} Members</p>
         </div>
       </div>
-      <button onClick={clickEvent} variant="default" className="bg-[#ffffff] border-[1px] border-[#4b5563] px-5 py-3 rounded-2xl hover:bg-[#4b5563] hover:text-white">
+      <button
+        onClick={clickEvent}
+        variant="default"
+        className="bg-[#ffffff] border-[1px] border-[#4b5563] px-5 py-3 rounded-2xl hover:bg-[#4b5563] hover:text-white"
+      >
         Join
       </button>
     </div>
-  )
+  );
 }
