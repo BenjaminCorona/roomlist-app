@@ -2,7 +2,6 @@ import { ArrowLeft, Plus } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PocketBase from 'pocketbase';
-
 import swal from 'sweetalert2';
 
 export default function CreateJoinRoom() {
@@ -37,10 +36,8 @@ export default function CreateJoinRoom() {
     }
 
     try {
-      // Cambiado para la colección "Salas" y el campo "Codigo_Sala"
       const result = await pb.collection('Salas').getFirstListItem(`Codigo_Sala="${roomCode}"`);
 
-      // Si existe la sala, preguntamos al usuario si quiere unirse
       swal.fire({
         title: `Sala encontrada: ${result.Nombre_Sala}`,
         text: '¿Quieres unirte a esta sala?',
@@ -51,23 +48,25 @@ export default function CreateJoinRoom() {
         customClass: {
           actions: 'my-actions',
         }
-        
-        
       }).then((willJoin) => {
         if (willJoin.isConfirmed) {
-          // Navegar a la lista de salas o ejecutar otra acción
           navigateRoomList();
         } else if (willJoin.dismiss === swal.DismissReason.cancel) {
-          // Si el usuario cancela, regresar a la interfaz de CreateJoinRoom
-          navigate('/create-join-room');  // Cambia esto según la ruta correcta
+          navigate('/create-join-room');
         }
       });
     } catch (error) {
-      // Si no se encuentra el código de sala
       swal.fire('Error', 'El código de sala no existe.', 'error');
     }
   };
-  
+
+  // Función de validación para el código de sala
+  const handleRoomCodeChange = (e) => {
+    const input = e.target.value;
+    // Validar que solo haya letras (A-Z, a-z) y números (0-9) y que el máximo de caracteres sea 8
+    const validCode = input.replace(/[^a-zA-Z0-9]/g, '').slice(0, 8);
+    setRoomCode(validCode);
+  };
 
   return (
     <div className="flex h-screen bg-[#ffffff] p-6">
@@ -82,7 +81,7 @@ export default function CreateJoinRoom() {
               <input
                 id="name"
                 value={roomCode}
-                onChange={(e) => setRoomCode(e.target.value)}
+                onChange={handleRoomCodeChange}
                 placeholder="Código de Sala"
                 className="pl-3 w-1/2 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#4b5563]"
               />
