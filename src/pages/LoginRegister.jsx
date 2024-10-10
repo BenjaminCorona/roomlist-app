@@ -167,8 +167,22 @@ export default function AuthForm() {
     }
   };
 
+  //Estado para la imagen de fondo
+  const [backgroundImage, setBackgroundImage] = useState("");
+
+  //Generar background aleatorio
+  useEffect(() => {
+    // Generar un número aleatorio entre 1 y 4
+    const randomNumber = Math.floor(Math.random() * 4) + 1;
+    // Actualizar el estado con la ruta de la imagen aleatoria
+    setBackgroundImage(`/bg-login/bg${randomNumber}.png`);
+  }, []);
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100"
+    style={{ backgroundImage: `url(${backgroundImage})` }} // Fondo dinámico
+
+    >
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg">
         <div className="p-6 border-b border-gray-200">
           <h1 className="text-2xl font-bold text-center">Bienvenido</h1>

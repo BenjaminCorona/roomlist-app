@@ -95,7 +95,7 @@ export default function CreateJoinRoom() {
   }, []);
 
   return (
-    <div className="flex h-screen bg-[#ffffff] p-6">
+    <div className="flex h-screen bg-gray-100 p-6">
       <div className="w-full max-w-3xl mx-auto bg-white rounded-3xl overflow-hidden flex">
         {/* Left side - Content */}
         <div className="flex-1 p-8">
