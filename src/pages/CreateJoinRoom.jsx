@@ -4,14 +4,17 @@ import { useNavigate } from "react-router-dom";
 import PocketBase from 'pocketbase';
 import swal from 'sweetalert2';
 
+
 export default function CreateJoinRoom() {
   const pb = new PocketBase('https://roomlist.pockethost.io');
   const navigate = useNavigate();
+
   const [roomCode, setRoomCode] = useState('');
 
   const navigateRoomList = () => {
-    navigate('/room-list');
+    navigate(`/room-list/${roomCode}`);
   };
+
 
   const navigateCreateNewRoom = () => {
     navigate('/create-new-room');
@@ -27,6 +30,7 @@ export default function CreateJoinRoom() {
       }
     }
   }, [navigate]);
+
 
   // Función para unirse a una sala o validar su existencia
   const joinRoom = async () => {
@@ -68,6 +72,8 @@ export default function CreateJoinRoom() {
     setRoomCode(validCode);
   };
 
+
+
   return (
     <div className="flex h-screen bg-[#ffffff] p-6">
       <div className="w-full max-w-3xl mx-auto bg-white rounded-3xl overflow-hidden flex">
@@ -76,6 +82,7 @@ export default function CreateJoinRoom() {
           {/* Main content */}
           <main>
             <h1 className="text-2xl font-bold mb-2">Ingresar a Sala</h1>
+
             <div className="relative">
               <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={18} />
               <input
@@ -95,6 +102,7 @@ export default function CreateJoinRoom() {
                 Unirse
               </button>
             </div>
+
             <div className="relative">
               <button
                 onClick={navigateCreateNewRoom}
@@ -114,7 +122,7 @@ export default function CreateJoinRoom() {
                 members={18}
                 icon="1"
                 iconBg="bg-gray-900"
-                clickEvent={navigateRoomList}
+                // clickEvent={navigateRoomList}
               />
               <WorkspaceOption
                 name="Sala 2"
@@ -122,7 +130,7 @@ export default function CreateJoinRoom() {
                 icon="2"
                 iconBg="bg-purple-200"
                 iconColor="text-purple-600"
-                clickEvent={navigateRoomList}
+                //clickEvent={navigateRoomList}
               />
             </div>
           </main>
