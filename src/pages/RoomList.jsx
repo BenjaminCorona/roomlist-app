@@ -17,6 +17,7 @@ import {
   Home,
   History,
   HistoryIcon,
+  LogOut,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import PocketBase from 'pocketbase';
@@ -87,6 +88,8 @@ export default function RoomList() {
         } else {
           swal("Error!", "No existe ninguna sala con el código proporcionado", "error");
           console.log("No se encontró ninguna sala con el código especificado.");
+          //Eliminar el código de sala del localStorage
+          localStorage.removeItem("roomCode");
           navigate("/create-join-room");
         }
       } catch (error) {
@@ -117,6 +120,23 @@ export default function RoomList() {
       fetchData();
     }
   }, [codigoSala]);
+
+  const exitRoom = () => {
+    swal("Sala cerrada!", "La sala ha sido cerrada correctamente", "success");
+    //Eliminar el código de sala del localStorage
+    localStorage.removeItem("roomCode");
+    console.log("Código de sala eliminado:", localStorage.getItem("roomCode"));
+    navigate("/");
+  };
+
+  //Que los usuarios no puedan acceder a la ventana de sala e historial de tarjetas sin haberse unido o creado a una sala
+  //Si no hay código de sala en el localStorage, se manda a la página de creación o unión de sala
+  useEffect(() => {
+    const storedRoomCode = localStorage.getItem("roomCode");
+    if (!storedRoomCode) {
+      navigate("/create-join-room");
+    }
+  }, []);
 
   return (
     <div
@@ -169,6 +189,14 @@ export default function RoomList() {
             <UserItemList users={users} />
           </div>
         </div>
+
+      <button
+        onClick={exitRoom}
+        className="w-full mt-4 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded flex items-center justify-center"
+      >
+        <LogOut size={16} className="mr-2" /> Salir
+      </button>
+
       </div>
 
       {/* Main Content */}

@@ -89,6 +89,14 @@ export default function History() {
       }
     }, [navigate]);
 
+  //Que los usuarios no puedan acceder a la ventana de sala e historial de tarjetas sin haberse unido o creado a una sala
+  useEffect(() => {
+    const storedRoomCode = localStorage.getItem("roomCode");
+    if (!storedRoomCode) {
+      navigate("/create-join-room");
+    }
+  }, []);
+
   return (
     <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow">
       <header className="flex justify-between items-center mb-6">
