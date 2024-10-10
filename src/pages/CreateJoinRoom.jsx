@@ -4,17 +4,16 @@ import { useNavigate } from "react-router-dom";
 import PocketBase from 'pocketbase';
 import swal from 'sweetalert2';
 
-
 export default function CreateJoinRoom() {
   const pb = new PocketBase('https://roomlist.pockethost.io');
   const navigate = useNavigate();
 
   const [roomCode, setRoomCode] = useState('');
+  const [roomHistory, setRoomHistory] = useState([]); // Estado para almacenar el historial de salas
 
-  const navigateRoomList = () => {
+  const navigateRoomList = (roomCode) => {
     navigate(`/room-list/${roomCode}`);
   };
-
 
   const navigateCreateNewRoom = () => {
     navigate('/create-new-room');
@@ -31,6 +30,34 @@ export default function CreateJoinRoom() {
     }
   }, [navigate]);
 
+  // Obtener las salas de la base de datos filtrando solo por las que están en el localStorage
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        // Obtener los códigos de sala almacenados en localStorage
+        const visitedRooms = JSON.parse(localStorage.getItem('visitedRooms')) || [];
+
+        if (visitedRooms.length === 0) return;
+
+        // Obtener todas las salas de PocketBase
+        const records = await pb.collection('Salas').getFullList();
+
+        // Filtrar las salas que coincidan con los códigos almacenados en localStorage
+        const filteredRooms = records.filter(room => visitedRooms.includes(room.Codigo_Sala));
+
+        // Ordenar las salas para que la última visitada esté primero
+        const orderedRooms = visitedRooms
+          .map(code => filteredRooms.find(room => room.Codigo_Sala === code))
+          .filter(Boolean); // Eliminar los valores `undefined` si no se encuentra la sala
+
+        setRoomHistory(orderedRooms);
+      } catch (error) {
+        console.error('Error al obtener salas:', error);
+      }
+    };
+
+    fetchRooms();
+  }, []);
 
   // Función para unirse a una sala o validar su existencia
   const joinRoom = async () => {
@@ -54,7 +81,20 @@ export default function CreateJoinRoom() {
         }
       }).then((willJoin) => {
         if (willJoin.isConfirmed) {
-          navigateRoomList();
+          // Almacenar el código de la sala en localStorage
+          let visitedRooms = JSON.parse(localStorage.getItem('visitedRooms')) || [];
+
+          // Si ya existe el código en el historial, se elimina para luego volver a agregarlo al principio
+          visitedRooms = visitedRooms.filter(code => code !== roomCode);
+
+          // Agregar la sala al principio del historial
+          visitedRooms.unshift(roomCode);
+
+          // Guardar el historial actualizado en localStorage
+          localStorage.setItem('visitedRooms', JSON.stringify(visitedRooms));
+
+          // Redirigir a la sala
+          navigateRoomList(roomCode);
         } else if (willJoin.dismiss === swal.DismissReason.cancel) {
           navigate('/create-join-room');
         }
@@ -71,8 +111,6 @@ export default function CreateJoinRoom() {
     const validCode = input.replace(/[^a-zA-Z0-9]/g, '').slice(0, 8);
     setRoomCode(validCode);
   };
-
-
 
   return (
     <div className="flex h-screen bg-[#ffffff] p-6">
@@ -113,25 +151,22 @@ export default function CreateJoinRoom() {
             </div>
             <br />
             <br />
-            <p className="text-gray-600 text-large mb-6">Salas Recientes:</p>
+            <p className="text-gray-600 text-large mb-6">Historial de Salas:</p>
 
-            {/* Workspace options */}
+            {/* Historial de salas */}
             <div className="space-y-4">
-              <WorkspaceOption
-                name="Sala 1"
-                members={18}
-                icon="1"
-                iconBg="bg-gray-900"
-                // clickEvent={navigateRoomList}
-              />
-              <WorkspaceOption
-                name="Sala 2"
-                members={2}
-                icon="2"
-                iconBg="bg-purple-200"
-                iconColor="text-purple-600"
-                //clickEvent={navigateRoomList}
-              />
+              {roomHistory.length > 0 ? (
+                roomHistory.map((room) => (
+                  <RoomHistoryOption
+                    key={room.id}
+                    name={room.Nombre_Sala}
+                    code={room.Codigo_Sala}
+                    clickEvent={() => navigateRoomList(room.Codigo_Sala)}
+                  />
+                ))
+              ) : (
+                <p className="text-gray-500">No hay salas recientes.</p>
+              )}
             </div>
           </main>
         </div>
@@ -147,24 +182,21 @@ export default function CreateJoinRoom() {
   );
 }
 
-function WorkspaceOption({ name, members, icon, iconBg, iconColor = "text-white", clickEvent }) {
+// Componente para mostrar el historial de salas
+function RoomHistoryOption({ name, code, clickEvent }) {
   return (
     <div className="flex items-center justify-between p-4">
       <div className="flex items-center">
-        <div className={`w-10 h-10 ${iconBg} ${iconColor} rounded-md flex items-center justify-center font-bold mr-4`}>
-          {icon}
-        </div>
-        <div>
+        <div className="flex flex-col">
           <h3 className="font-semibold">{name}</h3>
-          <p className="text-sm text-gray-500">{members} Members</p>
+          <p className="text-sm text-gray-500">Código: {code}</p>
         </div>
       </div>
       <button
         onClick={clickEvent}
-        variant="default"
         className="bg-[#ffffff] border-[1px] border-[#4b5563] px-5 py-3 rounded-2xl hover:bg-[#4b5563] hover:text-white"
       >
-        Join
+        Ingresar
       </button>
     </div>
   );
