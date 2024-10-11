@@ -124,6 +124,13 @@ export default function CreateJoinRoom() {
     console.log("Código de sala almacenado:", roomCode);
   };
 
+    // Función para guardar el código de sala en el localStorage cuado se le da click en un evento de sala
+    const saveRoomCodeJoin = (roomCodeJoin) => {
+      localStorage.setItem("roomCode", roomCodeJoin);
+      navigateRoomList(roomCodeJoin);
+      console.log("Código de sala almacenado:", roomCodeJoin);
+    };
+
   //Que los usuarios no puedan acceder a la ventana de sala e historial de tarjetas sin haberse unido o creado a una sala
   useEffect(() => {
     const storedRoomCode = localStorage.getItem("roomCode");
@@ -196,7 +203,7 @@ export default function CreateJoinRoom() {
                     key={room.id}
                     name={room.Nombre_Sala}
                     code={room.Codigo_Sala}
-                    clickEvent={() => navigateRoomList(room.Codigo_Sala)}
+                    clickEvent={() => saveRoomCodeJoin(room.Codigo_Sala)}
                   />
                 ))
               ) : (
