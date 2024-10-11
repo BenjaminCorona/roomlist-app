@@ -4,10 +4,8 @@ import { useNavigate } from "react-router-dom";
 import PocketBase from 'pocketbase';
 import swal from 'sweetalert';
 
-
 export default function CreateNewRoom() {
   const pb = new PocketBase('https://roomlist.pockethost.io');
-  
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [message, setMessage] = useState({
@@ -16,8 +14,7 @@ export default function CreateNewRoom() {
     variant: "",
   });
 
-  //Constante del codigo de sala
-  //const [codigo, setCodigo] = useState("");
+  const navigate = useNavigate();
 
   const generarCodigo = () => {
     let nuevoCodigo = '';
@@ -51,7 +48,7 @@ export default function CreateNewRoom() {
       });
       return;
     }
-    if(descripcion.trim() === ""){
+    if (descripcion.trim() === "") {
       setMessage({
         title: "Error",
         description: "La sala debe de tener una descripción.",
@@ -59,42 +56,53 @@ export default function CreateNewRoom() {
       });
       return;
     }
-    
+  
     let nuevoCodigo = '';
     let codigoExiste = true;
-
+  
     // Repetir hasta encontrar un código único
     while (codigoExiste) {
       nuevoCodigo = generarCodigo(); // Generar un nuevo código
       codigoExiste = await verificarCodigoExistente(nuevoCodigo); // Verificar si el código ya existe
     }
-
+  
     try {
       // Lógica para crear la sala en PocketBase
       const data = {
-        "Nombre_Sala":nombre,
-        "Descripcion_Sala":descripcion,
+        "Nombre_Sala": nombre,
+        "Descripcion_Sala": descripcion,
         "Codigo_Sala": nuevoCodigo, // Incluir el código generado
       };
       const record = await pb.collection('Salas').create(data);
-      // Guardar el código en localStorage
-      localStorage.setItem('roomCode', nuevoCodigo);
-
-      // Mostrar mensaje de éxito
-      if(record) {
-      swal({
-        title: "Sala Creada",
-        text: `La sala "${nombre}" ha sido creada con éxito. Código: ${nuevoCodigo}`,
-        icon: "success",
-        confirmButtonText: "Aceptar",
-      });
-
-      // Limpiar campos
-      setNombre("");
-      setDescripcion("");
-      // Redirigir a la pantalla del tablero después de la creación de la nueva sala
-      navigateRoomList();
-    }
+      
+      if (record) {
+        // Almacenar el código de la nueva sala en el historial de 'visitedRooms'
+        let visitedRooms = JSON.parse(localStorage.getItem('visitedRooms')) || [];
+  
+        // Si ya existe el código en el historial, se elimina para luego volver a agregarlo al principio
+        visitedRooms = visitedRooms.filter(code => code !== nuevoCodigo);
+  
+        // Agregar el nuevo código de sala al principio del historial
+        visitedRooms.unshift(nuevoCodigo);
+  
+        // Guardar el historial actualizado en localStorage
+        localStorage.setItem('visitedRooms', JSON.stringify(visitedRooms));
+  
+        // Mostrar mensaje de éxito con SweetAlert
+        swal({
+          title: "Sala Creada",
+          text: `La sala "${nombre}" ha sido creada con éxito. Código: ${nuevoCodigo}`,
+          icon: "success",
+          button: "Aceptar",
+        }).then(() => {
+          // Redirigir a CreateJoinRoom después de cerrar la alerta
+          navigate('/create-join-room');
+        });
+  
+        // Limpiar campos
+        setNombre("");
+        setDescripcion("");
+      }
     } catch (error) {
       setMessage({
         title: "Error",
@@ -104,12 +112,6 @@ export default function CreateNewRoom() {
       console.error('Error al crear la sala:', error);
     }
   };
-
-  const navigate = useNavigate();
-
-  const navigateRoomList = () => {
-    navigate('/room-list')
-  }
 
   // Comprobar si el token está en el localStorage al cargar la página si no, se manda a login
   useEffect(() => {
@@ -156,7 +158,6 @@ export default function CreateNewRoom() {
             />
           </div>
           <button
-          onClick={handleSubmit}
             type="submit"
             className="w-full bg-[#4b5563] text-white py-2 rounded flex items-center justify-center"
           >
