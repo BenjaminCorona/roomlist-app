@@ -8,7 +8,7 @@ export default function CreateJoinRoom() {
   const pb = new PocketBase("https://roomlist.pockethost.io");
   const navigate = useNavigate();
 
-  const [roomCode, setRoomCode] = useState('');
+  const [roomCode, setRoomCode] = useState("");
   const [roomHistory, setRoomHistory] = useState([]); // Estado para almacenar el historial de salas
 
   const navigateRoomList = (roomCode) => {
@@ -39,24 +39,29 @@ export default function CreateJoinRoom() {
     const fetchRooms = async () => {
       try {
         // Obtener los códigos de sala almacenados en localStorage
-        const visitedRooms = JSON.parse(localStorage.getItem('visitedRooms')) || [];
+        const visitedRooms =
+          JSON.parse(localStorage.getItem("visitedRooms")) || [];
 
         if (visitedRooms.length === 0) return;
 
         // Obtener todas las salas de PocketBase
-        const records = await pb.collection('Salas').getFullList();
+        const records = await pb.collection("Salas").getFullList();
 
         // Filtrar las salas que coincidan con los códigos almacenados en localStorage
-        const filteredRooms = records.filter(room => visitedRooms.includes(room.Codigo_Sala));
+        const filteredRooms = records.filter((room) =>
+          visitedRooms.includes(room.Codigo_Sala)
+        );
 
         // Ordenar las salas para que la última visitada esté primero
         const orderedRooms = visitedRooms
-          .map(code => filteredRooms.find(room => room.Codigo_Sala === code))
+          .map((code) =>
+            filteredRooms.find((room) => room.Codigo_Sala === code)
+          )
           .filter(Boolean); // Eliminar los valores `undefined` si no se encuentra la sala
 
         setRoomHistory(orderedRooms);
       } catch (error) {
-        console.error('Error al obtener salas:', error);
+        console.error("Error al obtener salas:", error);
       }
     };
 
@@ -69,47 +74,89 @@ export default function CreateJoinRoom() {
       swal.fire("Error", "Por favor ingrese un código de sala.", "error");
       return;
     }
-
+  
     try {
-      const result = await pb.collection('Salas').getFirstListItem(`Codigo_Sala="${roomCode}"`);
-
-      swal.fire({
-        title: `Sala encontrada: ${result.Nombre_Sala}`,
-        text: '¿Quieres unirte a esta sala?',
-        icon: 'success',
-        showCancelButton: true,
-        confirmButtonText: 'Unirse',
-        cancelButtonText: 'Cancelar',
-        customClass: {
-          actions: 'my-actions',
-        }
-      }).then((willJoin) => {
-        if (willJoin.isConfirmed) {
-          // Almacenar el código de la sala en localStorage
-          let visitedRooms = JSON.parse(localStorage.getItem('visitedRooms')) || [];
-
-          // Si ya existe el código en el historial, se elimina para luego volver a agregarlo al principio
-          visitedRooms = visitedRooms.filter(code => code !== roomCode);
-
-          // Agregar la sala al principio del historial
-          visitedRooms.unshift(roomCode);
-
-          // Guardar el historial actualizado en localStorage
-          localStorage.setItem('visitedRooms', JSON.stringify(visitedRooms));
-
-          // Redirigir a la sala
-          navigateRoomList(roomCode);
-        } else if (willJoin.dismiss === swal.DismissReason.cancel) {
-          navigate('/create-join-room');
-        }
-      });
-      saveRoomCode();
-
+      const result = await pb.collection("Salas").getFirstListItem(`Codigo_Sala="${roomCode}"`);
+  
+      swal
+        .fire({
+          title: `Sala encontrada: ${result.Nombre_Sala}`,
+          text: "¿Quieres unirte a esta sala?",
+          icon: "success",
+          showCancelButton: true,
+          confirmButtonText: "Unirse",
+          cancelButtonText: "Cancelar",
+          customClass: {
+            actions: "my-actions",
+          },
+        })
+        .then(async (willJoin) => {
+          if (willJoin.isConfirmed) {
+            // Almacenar el código de la sala en localStorage
+            let visitedRooms = JSON.parse(localStorage.getItem("visitedRooms")) || [];
+  
+            // Si ya existe el código en el historial, se elimina para luego volver a agregarlo al principio
+            visitedRooms = visitedRooms.filter((code) => code !== roomCode);
+  
+            // Agregar la sala al principio del historial
+            visitedRooms.unshift(roomCode);
+  
+            // Guardar el historial actualizado en localStorage
+            localStorage.setItem("visitedRooms", JSON.stringify(visitedRooms));
+  
+            // Aquí empieza la lógica añadida para guardar el código de la sala y registrar el usuario en la BD
+            const data = {
+              ID_Usuario: pb.authStore.model?.id, // ID del usuario actual
+              ID_Sala: roomCode, // Código de la sala que se intenta unir
+            };
+  
+            // Validar que los datos son válidos antes de la consulta
+            if (!data.ID_Usuario || !data.ID_Sala) {
+              console.error("Error: ID_Usuario o ID_Sala no están definidos.");
+              return;
+            }
+  
+            // Validar si ya existe un registro con el mismo ID_Usuario e ID_Sala
+            let existingRecord = null;
+            try {
+              existingRecord = await pb.collection("Usuario_Tablero").getFirstListItem(
+                `ID_Usuario="${data.ID_Usuario}" && ID_Sala="${data.ID_Sala}"`
+              );
+            } catch (error) {
+              console.error("Error al buscar el registro existente:", error.message);
+            }
+  
+            if (existingRecord) {
+              console.log("El usuario ya está registrado en esta sala.");
+            } else {
+              console.log("El usuario no está registrado en esta sala.");
+  
+              try {
+                const record = await pb.collection("Usuario_Tablero").create(data);
+                if (record) {
+                  console.log("Usuario registrado en la sala exitosamente.");
+                }
+              } catch (error) {
+                console.error("Error al crear el registro:", error.message);
+              }
+            }
+  
+            // Sleep de 3 segundos antes de redirigir
+            //await new Promise((resolve) => setTimeout(resolve, 3000));
+  
+            // Redirigir a la sala
+            navigateRoomList(roomCode);
+          } else if (willJoin.dismiss === swal.DismissReason.cancel) {
+            navigate("/create-join-room");
+          }
+        });
+        
+      saveRoomCode(); // Llamamos a la función que guarda el código de sala (si existe esta función)
     } catch (error) {
       swal.fire("Error", "El código de sala no existe.", "error");
     }
   };
-
+  
   // Función de validación para el código de sala
   const handleRoomCodeChange = (e) => {
     const input = e.target.value;
@@ -124,12 +171,68 @@ export default function CreateJoinRoom() {
     console.log("Código de sala almacenado:", roomCode);
   };
 
-    // Función para guardar el código de sala en el localStorage cuado se le da click en un evento de sala
-    const saveRoomCodeJoin = (roomCodeJoin) => {
+  // Función para guardar el código de sala en el localStorage cuado se le da click en un evento de sala
+  const saveRoomCodeJoin = async (roomCodeJoin) => {
+    try {
       localStorage.setItem("roomCode", roomCodeJoin);
-      navigateRoomList(roomCodeJoin);
       console.log("Código de sala almacenado:", roomCodeJoin);
-    };
+  
+      // Enviar por consola el nombre y email del usuario
+      console.log(
+        "Nombre del usuario que se unió a la sala:",
+        pb.authStore.model?.username || "Nombre no disponible"
+      );
+      console.log(
+        "Email del usuario que se unió a la sala:",
+        pb.authStore.model?.email || "Email no disponible"
+      );
+      console.log("Código de la sala:", roomCodeJoin);
+  
+      // Esperar 3 segundos antes de redirigir a la página
+      //await new Promise((resolve) => setTimeout(resolve, 3000));
+  
+      const data = {
+        ID_Usuario: pb.authStore.model?.id,
+        ID_Sala: roomCodeJoin,
+      };
+  
+      // Validar que los datos son válidos antes de la consulta
+      if (!data.ID_Usuario || !data.ID_Sala) {
+        console.error("Error: ID_Usuario o ID_Sala no están definidos.");
+        return;
+      }
+  
+      // Validar si ya existe un registro con el mismo ID_Usuario e ID_Sala
+      let existingRecord = null;
+      try {
+        existingRecord = await pb
+          .collection("Usuario_Tablero")
+          .getFirstListItem(
+            `ID_Usuario="${data.ID_Usuario}" && ID_Sala="${data.ID_Sala}"`
+          );
+      } catch (error) {
+        console.error("Error al buscar el registro existente:", error.message);
+      }
+  
+      if (existingRecord) {
+        console.log("El usuario ya está registrado en esta sala.");
+        navigateRoomList(roomCodeJoin);
+      } else {
+        console.log("El usuario no está registrado en esta sala.");
+        try {
+          const record = await pb.collection("Usuario_Tablero").create(data);
+          if (record) {
+            navigateRoomList(roomCodeJoin);
+          }
+        } catch (error) {
+          console.error("Error al crear el registro:", error.message);
+        }
+      }
+    } catch (error) {
+      console.error("Error general en saveRoomCodeJoin:", error.message);
+    }
+  };
+  
 
   //Que los usuarios no puedan acceder a la ventana de sala e historial de tarjetas sin haberse unido o creado a una sala
   useEffect(() => {
@@ -196,7 +299,7 @@ export default function CreateJoinRoom() {
             <p className="text-gray-600 text-large mb-6">Historial de Salas:</p>
 
             {/* Historial de salas */}
-            <div className="space-y-4">
+            <div className="space-y-4 overflow-y-auto max-h-[500px]">
               {roomHistory.length > 0 ? (
                 roomHistory.map((room) => (
                   <RoomHistoryOption
@@ -225,14 +328,12 @@ export default function CreateJoinRoom() {
   );
 }
 
-
 // Componente para mostrar el historial de salas
 function RoomHistoryOption({ name, code, clickEvent }) {
   return (
     <div className="flex items-center justify-between p-4">
       <div className="flex items-center">
         <div className="flex flex-col">
-
           <h3 className="font-semibold">{name}</h3>
           <p className="text-sm text-gray-500">Código: {code}</p>
         </div>
