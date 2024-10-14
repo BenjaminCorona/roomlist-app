@@ -19,6 +19,7 @@ import {
   History,
   HistoryIcon,
   LogOut,
+  User
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import PocketBase from "pocketbase";
@@ -187,7 +188,7 @@ export default function RoomList() {
           <div className="flex items-center justify-between mb-6 bg-gray-200 hover:bg-gray-300 px-2 py-2 rounded-full ">
             <div className="flex items-center">
               <div className="h-8 w-8 mr-2 bg-gray-700 rounded-full flex items-center justify-center">
-                <span className="text-white">U</span>
+                <span className="text-white">{username.charAt(0)}</span>
               </div>
               <span className="font-semibold text-gray-600">{username}</span>
             </div>
