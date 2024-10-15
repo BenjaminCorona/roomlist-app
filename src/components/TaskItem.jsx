@@ -24,29 +24,28 @@ function TaskItem({ user, title, etiqueta }) {
   const { backgroundColor, textColor } = getStyles(etiqueta);
 
   return (
-      <>
-        <div className="w-full mb-3">
-          <button
-              onClick={toggleViewTaskModal}
-              className="bg-white bg-opacity-90 shadow-md rounded-lg w-full p-4 flex flex-col items-start text-left transition-all duration-200 hover:bg-opacity-100 hover:shadow-lg"
+      <div className="w-full mb-3">
+        <button
+            onClick={toggleViewTaskModal}
+            className="bg-white bg-opacity-90 shadow-md rounded-lg w-full p-4 flex flex-col items-start text-left transition-all duration-200 hover:bg-opacity-100 hover:shadow-lg"
+        >
+          <span className="text-gray-500 text-sm mb-1">{user}</span>
+          <h3 className="text-gray-800 font-semibold text-lg mb-2 break-words">{title}</h3>
+          <div className="flex flex-wrap gap-1">
+          <span
+              className="rounded-full text-xs font-medium px-2 py-1"
+              style={{
+                backgroundColor,
+                color: textColor,
+              }}
           >
-            <span className="text-gray-500 text-sm mb-1">{user}</span>
-            <h3 className="text-gray-700 font-semibold text-lg mb-2 line-clamp-2">{title}</h3>
-
-            <span
-                className="rounded-full text-xs font-medium px-2 py-1"
-                style={{
-                  backgroundColor,
-                  color: textColor,
-                }}
-            >
             {etiqueta}
           </span>
-          </button>
-        </div>
+          </div>
+        </button>
 
         {isViewTaskModalOpen && <ViewTask toggle={toggleViewTaskModal} />}
-      </>
+      </div>
   );
 }
 

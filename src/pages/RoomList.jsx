@@ -104,6 +104,7 @@ export default function RoomList() {
       const resultList = await pb.collection('Tarjetas').getFullList({
         filter: `ID_Sala.Codigo_Sala="${codigoSala}"`,
         expand: 'ID_Creador',
+        sort: '-created',
       }, { requestKey: null });
       console.log(resultList);
       if (resultList.length > 0) {
