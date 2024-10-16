@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Lock, CalendarIcon, PlusIcon, Target, CheckCircle2, Trash2, X } from 'lucide-react';
 import PocketBase from "pocketbase";
+import {logCardCreation, logRoomEntry} from '../tools/triggers_history.js';
 
 const pb = new PocketBase('https://roomlist.pockethost.io');
 
@@ -138,7 +139,7 @@ export default function AddNewTask({toggle, codigoSala, updateTarjetas}) {
           Fecha_Inicio: `${startDate} 00:00:00`,
           Fecha_Terminado: `${endDate} 00:00:00`,
           Estatus: true,
-          Progreso: "ToDo",
+          Progreso: "Por Hacer",
           Etiqueta: tags,
           ID_Usuario: userIds ? userIds : null,
           ID_Sala: salaID,
@@ -146,6 +147,8 @@ export default function AddNewTask({toggle, codigoSala, updateTarjetas}) {
         };
 
       const record = await pb.collection('Tarjetas').create(newTaskData);
+
+      await logCardCreation(currentUser, name);
       toggle();
       updateTarjetas();
     } catch (err) {

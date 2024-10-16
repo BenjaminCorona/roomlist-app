@@ -22,6 +22,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import PocketBase from 'pocketbase';
 import swal from "sweetalert";
+import { logRoomEntry } from '../tools/triggers_history.js';
 
 export default function RoomList() {
 
@@ -85,6 +86,10 @@ export default function RoomList() {
           const sala = resultList.items[0];
           setID(sala.id);
           setNombreSala(sala.Nombre_Sala);
+
+          //Llamar a log
+          const userinfo = pb.authStore.model;
+          await logRoomEntry(userinfo, codigoSala);
         } else {
           swal("Error!", "No existe ninguna sala con el código proporcionado", "error");
           console.log("No se encontró ninguna sala con el código especificado.");
