@@ -152,12 +152,12 @@ export default function CreateJoinRoom() {
               console.log("El usuario no está registrado en esta sala.");
 
               try {
-                const record = await pb
-                  .collection("Usuario_Tablero")
-                  .create(data);
-                if (record) {
-                  console.log("Usuario registrado en la sala exitosamente.");
-                }
+                // const record = await pb
+                //   .collection("Usuario_Tablero")
+                //   .create(data);
+                // if (record) {
+                //   console.log("Usuario registrado en la sala exitosamente.");
+                // }
               } catch (error) {
                 console.error("Error al crear el registro:", error.message);
               }
@@ -250,10 +250,10 @@ export default function CreateJoinRoom() {
       } else {
         console.log("El usuario no está registrado en esta sala.");
         try {
-          const record = await pb.collection("Usuario_Tablero").create(data);
-          if (record) {
-            navigateRoomList(roomCodeJoin);
-          }
+          //const record = await pb.collection("Usuario_Tablero").create(data);
+          // if (record) {
+          //   navigateRoomList(roomCodeJoin);
+          // }
         } catch (error) {
           console.error("Error al crear el registro:", error.message);
         }
