@@ -22,6 +22,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import PocketBase from 'pocketbase';
 import swal from "sweetalert";
+import { logRoomEntry } from '../tools/triggers_history.js';
 
 export default function RoomList() {
 
@@ -80,11 +81,15 @@ export default function RoomList() {
       try {
         const resultList = await pb.collection('Salas').getList(1, 1, {
           filter: `Codigo_Sala="${codigoSala}"`
-        });
+        }, { requestKey: null });
         if (resultList && resultList.items.length > 0) {
           const sala = resultList.items[0];
           setID(sala.id);
           setNombreSala(sala.Nombre_Sala);
+
+          //Llamar a log
+          const userinfo = pb.authStore.model;
+          await logRoomEntry(userinfo, codigoSala);
         } else {
           swal("Error!", "No existe ninguna sala con el código proporcionado", "error");
           console.log("No se encontró ninguna sala con el código especificado.");
@@ -99,25 +104,27 @@ export default function RoomList() {
     fetchData();
   }, [codigoSala, navigate]);
 
-  //Recuperar las tarjetas de la sala
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const resultList = await pb.collection('Tarjetas').getFullList({
-          filter: `ID_Sala.Codigo_Sala="${codigoSala}"`,
-          expand: 'ID_Usuario'
-        });
-        if (resultList.length > 0) {
-          setTarjetas(resultList);
-        } else {
-          console.log("No se encontraron tarjetas con el id de sala especificado.");
-        }
-      } catch (error) {
-        console.error("Error al recuperar las tarjetas:", error);
+  const updateTarjetas = async () => {
+    try {
+      const resultList = await pb.collection('Tarjetas').getFullList({
+        filter: `ID_Sala.Codigo_Sala="${codigoSala}"`,
+        expand: 'ID_Creador',
+        sort: '-created',
+      }, { requestKey: null });
+      console.log(resultList);
+      if (resultList.length > 0) {
+        setTarjetas(resultList);
+      } else {
+        console.log("No se encontraron tarjetas con el id de sala especificado.");
       }
-    };
+    } catch (error) {
+      console.error("Error al recuperar las tarjetas:", error);
+    }
+  };
+
+  useEffect(() => {
     if (codigoSala) {
-      fetchData();
+      updateTarjetas();
     }
   }, [codigoSala]);
 
@@ -171,7 +178,7 @@ export default function RoomList() {
         >
           <Plus size={16} className="mr-2" /> Añadir tarea
         </button>
-        {isAddNewTaskModalOpen && <AddNewTask toggle={toggleAddNewTaskModal} />}
+        {isAddNewTaskModalOpen && <AddNewTask toggle={toggleAddNewTaskModal} codigoSala={codigoSala} updateTarjetas={updateTarjetas} />}
         <div className="space-y-2">
           <button className="w-full justify-start py-2 px-4 rounded flex items-center bg-gray-200 hover:bg-gray-300">
             <Home size={16} className="mr-2" /> Inicio
@@ -218,7 +225,7 @@ export default function RoomList() {
                   <TaskItem
                       key={tarjeta.id}
                       title={tarjeta.Titulo}      // Título de la tarjeta
-                      user={tarjeta.expand.ID_Usuario[0].username}
+                      user={tarjeta.expand?.ID_Creador?.username || 'No asignado'}
                       etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
                   />
               ))}
