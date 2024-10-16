@@ -3,6 +3,7 @@ import { PlusCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PocketBase from 'pocketbase';
 import swal from 'sweetalert';
+import { logRoomEntry} from '../tools/triggers_history.js';
 
 export default function CreateNewRoom() {
   const pb = new PocketBase('https://roomlist.pockethost.io');
@@ -87,7 +88,10 @@ export default function CreateNewRoom() {
   
         // Guardar el historial actualizado en localStorage
         localStorage.setItem('visitedRooms', JSON.stringify(visitedRooms));
-  
+
+        const userinfo = pb.authStore.model;
+        await logRoomEntry(userinfo, nuevoCodigo);
+
         // Mostrar mensaje de éxito con SweetAlert
         swal({
           title: "Sala Creada",
