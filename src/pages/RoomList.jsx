@@ -216,7 +216,7 @@ export default function RoomList() {
         </div>
 
         <div className="mt-6">
-          <GroupMembers />
+          <GroupMembers/>
         </div>
         {/** 
         <div className="mt-6">

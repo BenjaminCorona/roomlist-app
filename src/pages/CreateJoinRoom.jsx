@@ -74,10 +74,24 @@ export default function CreateJoinRoom() {
       swal.fire("Error", "Por favor ingrese un código de sala.", "error");
       return;
     }
-  
+
     try {
-      const result = await pb.collection("Salas").getFirstListItem(`Codigo_Sala="${roomCode}"`);
-  
+      // Busca la sala por su código
+      const result = await pb
+        .collection("Salas")
+        .getFirstListItem(`Codigo_Sala="${roomCode}"`);
+
+      // Busca la sala por su id
+      const record = await pb
+        .collection("Salas")
+        .getFirstListItem(`Codigo_Sala = "${roomCode}"`);
+
+      // Verifica si se encontró la sala
+      if (record) {
+        // Imprime el código de la sala
+        console.log("Chance tu id es este :", record.id);
+      }
+
       swal
         .fire({
           title: `Sala encontrada: ${result.Nombre_Sala}`,
@@ -93,46 +107,54 @@ export default function CreateJoinRoom() {
         .then(async (willJoin) => {
           if (willJoin.isConfirmed) {
             // Almacenar el código de la sala en localStorage
-            let visitedRooms = JSON.parse(localStorage.getItem("visitedRooms")) || [];
-  
+            let visitedRooms =
+              JSON.parse(localStorage.getItem("visitedRooms")) || [];
+
             // Si ya existe el código en el historial, se elimina para luego volver a agregarlo al principio
             visitedRooms = visitedRooms.filter((code) => code !== roomCode);
-  
+
             // Agregar la sala al principio del historial
             visitedRooms.unshift(roomCode);
-  
+
             // Guardar el historial actualizado en localStorage
             localStorage.setItem("visitedRooms", JSON.stringify(visitedRooms));
-  
+
             // Aquí empieza la lógica añadida para guardar el código de la sala y registrar el usuario en la BD
             const data = {
               ID_Usuario: pb.authStore.model?.id, // ID del usuario actual
-              ID_Sala: roomCode, // Código de la sala que se intenta unir
+              ID_Sala: record.id, // Código de la sala que se intenta unir
             };
-  
+
             // Validar que los datos son válidos antes de la consulta
             if (!data.ID_Usuario || !data.ID_Sala) {
               console.error("Error: ID_Usuario o ID_Sala no están definidos.");
               return;
             }
-  
+
             // Validar si ya existe un registro con el mismo ID_Usuario e ID_Sala
             let existingRecord = null;
             try {
-              existingRecord = await pb.collection("Usuario_Tablero").getFirstListItem(
-                `ID_Usuario="${data.ID_Usuario}" && ID_Sala="${data.ID_Sala}"`
-              );
+              existingRecord = await pb
+                .collection("Usuario_Tablero")
+                .getFirstListItem(
+                  `ID_Usuario="${data.ID_Usuario}" && ID_Sala="${data.ID_Sala}"`
+                );
             } catch (error) {
-              console.error("Error al buscar el registro existente:", error.message);
+              console.error(
+                "Error al buscar el registro existente:",
+                error.message
+              );
             }
-  
+
             if (existingRecord) {
               console.log("El usuario ya está registrado en esta sala.");
             } else {
               console.log("El usuario no está registrado en esta sala.");
-  
+
               try {
-                const record = await pb.collection("Usuario_Tablero").create(data);
+                const record = await pb
+                  .collection("Usuario_Tablero")
+                  .create(data);
                 if (record) {
                   console.log("Usuario registrado en la sala exitosamente.");
                 }
@@ -140,23 +162,23 @@ export default function CreateJoinRoom() {
                 console.error("Error al crear el registro:", error.message);
               }
             }
-  
+
             // Sleep de 3 segundos antes de redirigir
             //await new Promise((resolve) => setTimeout(resolve, 3000));
-  
+
             // Redirigir a la sala
             navigateRoomList(roomCode);
           } else if (willJoin.dismiss === swal.DismissReason.cancel) {
             navigate("/create-join-room");
           }
         });
-        
+
       saveRoomCode(); // Llamamos a la función que guarda el código de sala (si existe esta función)
     } catch (error) {
       swal.fire("Error", "El código de sala no existe.", "error");
     }
   };
-  
+
   // Función de validación para el código de sala
   const handleRoomCodeChange = (e) => {
     const input = e.target.value;
@@ -176,7 +198,18 @@ export default function CreateJoinRoom() {
     try {
       localStorage.setItem("roomCode", roomCodeJoin);
       console.log("Código de sala almacenado:", roomCodeJoin);
-  
+
+      // Busca la sala por su código
+      const record = await pb
+        .collection("Salas")
+        .getFirstListItem(`Codigo_Sala = "${roomCodeJoin}"`);
+
+      // Verifica si se encontró la sala
+      if (record) {
+        // Imprime el código de la sala
+        console.log("Chance tu id es este :", record.id);
+      }
+
       // Enviar por consola el nombre y email del usuario
       console.log(
         "Nombre del usuario que se unió a la sala:",
@@ -187,21 +220,18 @@ export default function CreateJoinRoom() {
         pb.authStore.model?.email || "Email no disponible"
       );
       console.log("Código de la sala:", roomCodeJoin);
-  
-      // Esperar 3 segundos antes de redirigir a la página
-      //await new Promise((resolve) => setTimeout(resolve, 3000));
-  
+
       const data = {
         ID_Usuario: pb.authStore.model?.id,
-        ID_Sala: roomCodeJoin,
+        ID_Sala: record.id,
       };
-  
+
       // Validar que los datos son válidos antes de la consulta
       if (!data.ID_Usuario || !data.ID_Sala) {
         console.error("Error: ID_Usuario o ID_Sala no están definidos.");
         return;
       }
-  
+
       // Validar si ya existe un registro con el mismo ID_Usuario e ID_Sala
       let existingRecord = null;
       try {
@@ -213,7 +243,7 @@ export default function CreateJoinRoom() {
       } catch (error) {
         console.error("Error al buscar el registro existente:", error.message);
       }
-  
+
       if (existingRecord) {
         console.log("El usuario ya está registrado en esta sala.");
         navigateRoomList(roomCodeJoin);
@@ -232,7 +262,6 @@ export default function CreateJoinRoom() {
       console.error("Error general en saveRoomCodeJoin:", error.message);
     }
   };
-  
 
   //Que los usuarios no puedan acceder a la ventana de sala e historial de tarjetas sin haberse unido o creado a una sala
   useEffect(() => {
