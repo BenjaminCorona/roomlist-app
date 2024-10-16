@@ -232,32 +232,34 @@ export default function CreateJoinRoom() {
         return;
       }
 
-      // Validar si ya existe un registro con el mismo ID_Usuario e ID_Sala
-      let existingRecord = null;
-      try {
-        existingRecord = await pb
-          .collection("Usuario_Tablero")
-          .getFirstListItem(
-            `ID_Usuario="${data.ID_Usuario}" && ID_Sala="${data.ID_Sala}"`
-          );
-      } catch (error) {
-        console.error("Error al buscar el registro existente:", error.message);
-      }
+      // // Validar si ya existe un registro con el mismo ID_Usuario e ID_Sala
+      // let existingRecord = null;
+      // try {
+      //   existingRecord = await pb
+      //     .collection("Usuario_Tablero")
+      //     .getFirstListItem(
+      //       `ID_Usuario="${data.ID_Usuario}" && ID_Sala="${data.ID_Sala}"`
+      //     );
+      // } catch (error) {
+      //   console.error("Error al buscar el registro existente:", error.message);
+      // }
 
-      if (existingRecord) {
-        console.log("El usuario ya está registrado en esta sala.");
-        navigateRoomList(roomCodeJoin);
-      } else {
-        console.log("El usuario no está registrado en esta sala.");
-        try {
-          //const record = await pb.collection("Usuario_Tablero").create(data);
-          // if (record) {
-          //   navigateRoomList(roomCodeJoin);
-          // }
-        } catch (error) {
-          console.error("Error al crear el registro:", error.message);
-        }
-      }
+      // if (existingRecord) {
+      //   console.log("El usuario ya está registrado en esta sala.");
+      //   navigateRoomList(roomCodeJoin);
+      // } else {
+      //   console.log("El usuario no está registrado en esta sala.");
+      //   try {
+      //     //const record = await pb.collection("Usuario_Tablero").create(data);
+      //     // if (record) {
+      //     //   navigateRoomList(roomCodeJoin);
+      //     // }
+      //   } catch (error) {
+      //     console.error("Error al crear el registro:", error.message);
+      //   }
+        
+      // }
+      navigateRoomList(roomCodeJoin)
     } catch (error) {
       console.error("Error general en saveRoomCodeJoin:", error.message);
     }
