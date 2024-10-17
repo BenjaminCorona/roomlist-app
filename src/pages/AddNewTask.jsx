@@ -37,6 +37,7 @@ export default function AddNewTask({toggle, codigoSala, updateTarjetas}) {
 
   //Función para cargar los usuarios de la sala
   const loadUsuarios = async () => {
+    console.log("Esta aqui");
     const usuariosTablero = await pb.collection('Usuario_Tablero').getFullList({
       filter: `ID_Sala.Codigo_Sala = "${codigoSala}"`}, { requestKey: null });
     if(usuariosTablero.length === 0){
