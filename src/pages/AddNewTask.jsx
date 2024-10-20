@@ -148,7 +148,7 @@ export default function AddNewTask({toggle, codigoSala, updateTarjetas}) {
 
       const record = await pb.collection('Tarjetas').create(newTaskData);
 
-      await logCardCreation(currentUser, name);
+      await logCardCreation(currentUser, name, codigoSala);
       toggle();
       updateTarjetas();
     } catch (err) {
