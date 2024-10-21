@@ -3,11 +3,6 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import PocketBase from 'pocketbase';
 
-// Datos de ejemplo (se usarán inicialmente, pero luego serán reemplazados por los datos de PocketBase)
-const initialActivityData = [
-  // Tu data de ejemplo aquí...
-];
-
 const taskVariants = {
   offscreen: {
     x: 200,
@@ -46,22 +41,31 @@ export default function History() {
     if (!storedRoomCode) {
       navigate("/create-join-room");
     }
-  }, []);
+  }, [navigate]);
 
-  // Función para cargar la actividad desde PocketBase solo cuando se selecciona "Toda la actividad"
+  // Función para cargar la actividad desde PocketBase con los datos expandidos
   const loadActivityData = async () => {
     try {
+      const storedRoomCode = localStorage.getItem("roomCode");
       const records = await pb.collection('Historial_Cambios').getFullList({
-        sort: '-Fecha_Cambio', // Ordenamos por fecha descendente
+        sort: '-Fecha_Cambio', // Ordenamos por fecha descendente     // Expande los datos de la sala relacionada
+        filter: `ID_Sala.Codigo_Sala ?= "${storedRoomCode}"` // Filtrar por código sala
       });
       
-      // Mapeamos los datos obtenidos para ajustar el formato
-      const formattedData = records.map((record, index) => ({
+      // Mapeamos los datos obtenidos para ajustarlos a la estructura deseada
+      const formattedData = records.map((record) => ({
         id: record.id,
-        task: record.Descripcion_Cambio, // Solo mostramos la descripción de la tarea
-        timestamp: new Date(record.Fecha_Cambio).toLocaleString(),
+        Descripcion_Cambio: record.Descripcion_Cambio,
+        Fecha_Cambio: new Date(record.Fecha_Cambio).toLocaleString(),
+        expand: {
+          sala: {
+            id: record.expand?.ID_Sala?.id || "",
+            Nombre_Sala: record.expand?.ID_Sala?.Nombre_Sala || "",
+            Codigo_Sala: record.expand?.ID_Sala?.Codigo_Sala || "",
+          },
+        },
       }));
-      
+
       setActivityData(formattedData);
     } catch (error) {
       console.error("Error al cargar datos de PocketBase:", error);
@@ -88,10 +92,15 @@ export default function History() {
               className="flex items-start space-x-4 p-3 hover:bg-gray-50 rounded-md transition-colors"
             >
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-gray-900 truncate">{item.task}</p>
+                <p className="text-sm text-gray-900 truncate">{item.Descripcion_Cambio}</p>
+                {item.expand.sala.Nombre_Sala && item.expand.sala.Codigo_Sala && (
+                  <p className="text-xs text-gray-500">
+                    Sala: {item.expand.sala.Nombre_Sala} ({item.expand.sala.Codigo_Sala})
+                  </p>
+                )}
               </div>
               <div className="flex items-center">
-                <span className="text-xs text-gray-400">{item.timestamp}</span>
+                <span className="text-xs text-gray-400">{item.Fecha_Cambio}</span>
               </div>
             </motion.li>
           ))}
@@ -112,9 +121,7 @@ function DropdownMenu({ filter, setFilter, loadActivityData }) {
     
     // Solo cargamos los datos si se selecciona "Toda la actividad"
     if (newFilter === "Toda la actividad") {
-      loadActivityData(); // Cargar la actividad desde PocketBase
-    } else {
-      // Para los otros filtros, puedes decidir si quieres limpiar o modificar los datos aquí.
+      loadActivityData();
     }
   };
 
