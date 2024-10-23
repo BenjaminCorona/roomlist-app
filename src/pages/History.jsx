@@ -47,11 +47,17 @@ export default function History() {
   const loadActivityData = async () => {
     try {
       const storedRoomCode = localStorage.getItem("roomCode");
+      let filterQuery = `ID_Sala.Codigo_Sala ?= "${storedRoomCode}"`;
+
+      if (filter === "Tareas añadidas") {
+        filterQuery += ` && Descripcion_Cambio ?~ "creó la tarjeta"`;
+      }
+
       const records = await pb.collection('Historial_Cambios').getFullList({
-        sort: '-Fecha_Cambio', // Ordenamos por fecha descendente     // Expande los datos de la sala relacionada
-        filter: `ID_Sala.Codigo_Sala ?= "${storedRoomCode}"` // Filtrar por código sala
+        sort: '-Fecha_Cambio',
+        filter: filterQuery,
       });
-      
+
       // Mapeamos los datos obtenidos para ajustarlos a la estructura deseada
       const formattedData = records.map((record) => ({
         id: record.id,
@@ -72,11 +78,15 @@ export default function History() {
     }
   };
 
+  useEffect(() => {
+    loadActivityData();
+  }, [filter]);
+
   return (
     <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow">
       <header className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Historial de Actividades</h1>
-        <DropdownMenu filter={filter} setFilter={setFilter} loadActivityData={loadActivityData} />
+        <DropdownMenu filter={filter} setFilter={setFilter} />
       </header>
 
       <motion.div className="max-h-80 overflow-y-auto overflow-x-hidden space-y-4">
@@ -110,7 +120,7 @@ export default function History() {
   );
 }
 
-function DropdownMenu({ filter, setFilter, loadActivityData }) {
+function DropdownMenu({ filter, setFilter }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -118,11 +128,6 @@ function DropdownMenu({ filter, setFilter, loadActivityData }) {
   const handleSelect = (newFilter) => {
     setFilter(newFilter);
     setIsOpen(false);
-    
-    // Solo cargamos los datos si se selecciona "Toda la actividad"
-    if (newFilter === "Toda la actividad") {
-      loadActivityData();
-    }
   };
 
   return (
