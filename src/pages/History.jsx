@@ -51,6 +51,10 @@ export default function History() {
 
       if (filter === "Tareas añadidas") {
         filterQuery += ` && Descripcion_Cambio ?~ "creó la tarjeta"`;
+      } else if (filter === "Tareas completadas") {
+        filterQuery += ` && Descripcion_Cambio ?~ "movió la tarjeta" && Descripcion_Cambio ?~ "a Done"`;
+      } else if (filter === "Tareas modificadas") {
+        filterQuery += ` && (Descripcion_Cambio ?~ "movió la tarjeta" && (Descripcion_Cambio ?~ "a In Progress" || Descripcion_Cambio ?~ "a Done"))`;
       }
 
       const records = await pb.collection('Historial_Cambios').getFullList({
@@ -99,10 +103,10 @@ export default function History() {
               custom={item.id}
               variants={taskVariants}
               key={item.id}
-              className="flex items-start space-x-4 p-3 hover:bg-gray-50 rounded-md transition-colors"
+              className="flex flex-wrap items-start space-x-4 p-3 hover:bg-gray-50 rounded-md transition-colors"
             >
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-gray-900 truncate">{item.Descripcion_Cambio}</p>
+                <p className="text-sm text-gray-900 whitespace-normal">{item.Descripcion_Cambio}</p>
                 {item.expand.sala.Nombre_Sala && item.expand.sala.Codigo_Sala && (
                   <p className="text-xs text-gray-500">
                     Sala: {item.expand.sala.Nombre_Sala} ({item.expand.sala.Codigo_Sala})
