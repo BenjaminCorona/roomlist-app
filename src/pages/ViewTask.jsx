@@ -1,7 +1,26 @@
-import { useState } from 'react'
-import { Pencil, Link, MoreHorizontal, File, CircleUser, X } from 'lucide-react'
+import { useState } from 'react';
+import { Pencil, Link, MoreHorizontal, File, CircleUser, X } from 'lucide-react';
+import PocketBase from 'pocketbase';
 
-export default function ViewTask({toggle}) {
+export default function ViewTask({toggle, taskid, users, title, descripcion, progreso, etiqueta, fechaInicio, fechaFin, user_creador}) {
+  
+  const pb = new PocketBase('https://roomlist.pockethost.io');
+  const [progresos, setProgreso] = useState(progreso); // Estado para el progreso
+
+  // Función para guardar cambios en la base de datos
+  const handleSave = async () => {
+    try {
+      const data ={
+        "Progreso": progresos
+      };      
+  
+      const record = await pb.collection('Tarjetas').update(taskid,data); // Actualiza el registro en PocketBase
+      window.location.reload(); // Recarga la página
+    } catch (error) {
+      console.error('Error al guardar el progreso:', error);
+    }
+  };
+  
   return (
       <div className={"fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70"}>
         <div className="relative mx-auto mt-0g max-w-3xl bg-white border border-gray-200 rounded-lg shadow-lg">
@@ -9,7 +28,7 @@ export default function ViewTask({toggle}) {
           <div className="p-4 border-b border-gray-200 flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <h2 className="text-xl font-semibold text-gray-900">
-                Nombre de la tarea
+                {title}
               </h2>
             </div>
             <div className="flex items-center space-x-2">
@@ -25,9 +44,7 @@ export default function ViewTask({toggle}) {
               <div className="flex items-start space-x-4 mb-6">
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-2">Descripción tarea</h4>
-                  <p className="mt-2 text-gray-700">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec dui in nunc ultricies lacinia.
-                  </p>
+                  <p className="mt-2 text-gray-700">{descripcion}</p>
                 </div>
               </div>
               <div>
@@ -63,39 +80,43 @@ export default function ViewTask({toggle}) {
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 mb-2">Autor</h3>
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-700">Nombre_de_usuario</span>
+                  <span className="text-sm text-gray-700">{user_creador}</span>
                 </div>
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 mb-2">Etiquetas</h3>
-                <span className="bg-red-100 text-red-800 py-1 px-2 rounded-full text-xs">etiqueta1</span>
+                <span className="bg-red-100 text-red-800 py-1 px-2 rounded-full text-xs">
+                  {etiqueta || "N/A"}
+                </span>
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 mb-2">Colaboradores</h3>
-                <ul>
-                  <li className="flex items-center">
-                    <CircleUser className="h-4 w-4 text-gray-600 mr-3"/>
-                    <span className="text-gray-700 text-sm">Colaborador1</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CircleUser className="h-4 w-4 text-gray-600 mr-3"/>
-                    <span className="text-gray-700 text-sm">Colaborador2</span>
-                  </li>
+                <ul className="max-h-32 overflow-y-auto">
+                  {(users || []).map((user, index) => (
+                    <li key={index} className="flex items-center">
+                      <CircleUser className="h-4 w-4 text-gray-600 mr-3" />
+                      <span className="text-gray-700 text-sm">{user}</span>
+                    </li>
+                  ))}
                 </ul>
-
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 mb-2">Estatus</h3>
-                <select className="w-full border border-gray-300 rounded p-2 bg-white">
-                  <option value="in-progress">En progreso</option>
-                  <option value="todo">Por hacer</option>
-                  <option value="done">Hecho</option>
+                <select
+                  className="w-full border border-gray-300 rounded p-2 bg-white"
+                  value={progresos}
+                  onChange={(e) => setProgreso(e.target.value)} // Actualiza `progreso` con el valor seleccionado
+                >
+                  <option value="Por Hacer">Por Hacer</option>
+                  <option value="En Progreso">En Progreso</option>
+                  <option value="Hecho">Hecho</option>
                 </select>
               </div>
               <div className="space-y-2">
+                
                 {[
-                  { label: 'Fecha de inicio', value: 'No date' },
-                  { label: 'Fecha de fin', value: 'No date' }
+                  { label: 'Fecha de inicio', value: fechaInicio ? new Date(fechaInicio).toLocaleDateString() : 'No date' },
+                  { label: 'Fecha de fin', value: fechaFin ? new Date(fechaFin).toLocaleDateString() : 'No date' }
                 ].map((item, index) => (
                     <div key={index} className="flex justify-between text-gray-700">
                       <span className="text-sm font-semibold">{item.label}</span>
@@ -103,6 +124,19 @@ export default function ViewTask({toggle}) {
                     </div>
                 ))}
               </div>
+              <div> </div>
+
+              <div> </div>
+
+              <div> </div>
+              {/* Botón de Guardar */}
+              <button
+                className="w-full mt-4 bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+                onClick={handleSave} // Manejador de evento para guardar
+                
+              >
+                Guardar
+              </button>
             </div>
           </div>
         </div>

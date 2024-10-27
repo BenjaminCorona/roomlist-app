@@ -105,7 +105,7 @@ export default function RoomList() {
       try {
         const resultList = await pb.collection('Tarjetas').getFullList({
           filter: `ID_Sala.Codigo_Sala="${codigoSala}"`,
-          expand: 'ID_Usuario'
+          expand: 'ID_Usuario, ID_Creador',
         });
         if (resultList.length > 0) {
           setTarjetas(resultList);
@@ -214,12 +214,20 @@ export default function RoomList() {
               <CircleCheckBig size={20} className="mr-2" /> To do
             </span>
             <div className="flex flex-col items-center w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
-              {tarjetas.map((tarjeta) => (
+              {tarjetas
+              .filter((tarjeta) => tarjeta.Progreso === "Por Hacer")  // Filtra según el estado
+              .map((tarjeta) => (
                   <TaskItem
-                      key={tarjeta.id}
-                      title={tarjeta.Titulo}      // Título de la tarjeta
-                      user={tarjeta.expand.ID_Usuario[0].username}
-                      etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
+                  key={tarjeta.id}
+                  taskid={tarjeta.id}
+                  title={tarjeta.Titulo}      // Título de la tarjeta
+                  descripcion={tarjeta.Descripcion}
+                  fechaInicio={tarjeta.Fecha_Inicio}
+                  fechaFin={tarjeta.Fecha_Terminado}
+                  progreso={tarjeta.Progreso}
+                  etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
+                  user_creador={tarjeta.expand.ID_Creador.username}
+                  users={tarjeta.expand.ID_Usuario.map(user => user.username)}
                   />
               ))}
             </div>
@@ -230,6 +238,22 @@ export default function RoomList() {
               <CircleCheckBig size={20} className="mr-2" /> In progress
             </span>
             <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
+              {tarjetas
+              .filter((tarjeta) => tarjeta.Progreso === "En Progreso")  // Filtra según el estado
+              .map((tarjeta) => (
+                  <TaskItem
+                  key={tarjeta.id}
+                  taskid={tarjeta.id}
+                  title={tarjeta.Titulo}      // Título de la tarjeta
+                  descripcion={tarjeta.Descripcion}
+                  fechaInicio={tarjeta.Fecha_Inicio}
+                  fechaFin={tarjeta.Fecha_Terminado}
+                  progreso={tarjeta.Progreso}
+                  etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
+                  user_creador={tarjeta.expand.ID_Creador.username}
+                  users={tarjeta.expand.ID_Usuario.map(user => user.username)}
+                  />
+              ))}
 
             </div>
           </div>
@@ -239,6 +263,22 @@ export default function RoomList() {
               <CircleCheckBig size={20} className="mr-2" /> Done
             </span>
             <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
+              {tarjetas
+              .filter((tarjeta) => tarjeta.Progreso === "Hecho")  // Filtra según el estado
+              .map((tarjeta) => (
+                  <TaskItem
+                      key={tarjeta.id}
+                      taskid={tarjeta.id}
+                      title={tarjeta.Titulo}      // Título de la tarjeta
+                      descripcion={tarjeta.Descripcion}
+                      fechaInicio={tarjeta.Fecha_Inicio}
+                      fechaFin={tarjeta.Fecha_Terminado}
+                      progreso={tarjeta.Progreso}
+                      etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
+                      user_creador={tarjeta.expand.ID_Creador.username}
+                      users={tarjeta.expand.ID_Usuario.map(user => user.username)}
+                  />
+              ))}
 
             </div>
           </div>
