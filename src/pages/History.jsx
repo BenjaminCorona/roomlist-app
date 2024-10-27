@@ -52,9 +52,9 @@ export default function History() {
       if (filter === "Tareas añadidas") {
         filterQuery += ` && Descripcion_Cambio ?~ "creó la tarjeta"`;
       } else if (filter === "Tareas completadas") {
-        filterQuery += ` && Descripcion_Cambio ?~ "movió la tarjeta" && Descripcion_Cambio ?~ "a Done"`;
+        filterQuery += ` && Descripcion_Cambio ?~ "movió la tarjeta" && Descripcion_Cambio ?~ "a Hecho"`;
       } else if (filter === "Tareas modificadas") {
-        filterQuery += ` && (Descripcion_Cambio ?~ "movió la tarjeta" && (Descripcion_Cambio ?~ "a In Progress" || Descripcion_Cambio ?~ "a Done"))`;
+        filterQuery += ` && (Descripcion_Cambio ?~ "movió la tarjeta" && (Descripcion_Cambio ?~ "a En Progreso" || Descripcion_Cambio ?~ "a Hecho"))`;
       }
 
       const records = await pb.collection('Historial_Cambios').getFullList({
