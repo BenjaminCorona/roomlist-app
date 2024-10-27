@@ -115,8 +115,8 @@ export default function ViewTask({toggle, taskid, users, title, descripcion, pro
               <div className="space-y-2">
                 
                 {[
-                  { label: 'Fecha de inicio', value: fechaInicio ? new Date(fechaInicio).toLocaleDateString() : 'No date' },
-                  { label: 'Fecha de fin', value: fechaFin ? new Date(fechaFin).toLocaleDateString() : 'No date' }
+                  { label: 'Fecha de inicio', value: fechaInicio ? new Date(fechaInicio).toLocaleDateString() : 'Sin fecha asignada' },
+                  { label: 'Fecha de fin', value: fechaFin ? new Date(fechaFin).toLocaleDateString() : 'Sin fecha asignada' }
                 ].map((item, index) => (
                     <div key={index} className="flex justify-between text-gray-700">
                       <span className="text-sm font-semibold">{item.label}</span>
