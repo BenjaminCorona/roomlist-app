@@ -47,7 +47,7 @@ export default function ViewTask({toggle, taskid, users, title, descripcion, pro
                   <p className="mt-2 text-gray-700">{descripcion}</p>
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <h4 className="font-semibold text-gray-900 mb-4">Archivos adjuntos</h4>
                 <ul className="space-y-2">
                   <li className="flex items-center justify-between bg-gray-100 p-3 rounded-lg hover:bg-gray-200 transition duration-150 ease-in-out">
@@ -72,7 +72,7 @@ export default function ViewTask({toggle, taskid, users, title, descripcion, pro
                     <button className="text-blue-500 hover:underline">Descargar</button>
                   </li>
                 </ul>
-              </div>
+              </div> */}
             </div>
 
             {/* Sidebar */}
