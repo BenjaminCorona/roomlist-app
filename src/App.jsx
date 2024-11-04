@@ -29,7 +29,6 @@ function App() {
   return (
     <>
 
-    <BrowserRouter>
         <Routes>
           <Route index path="/" element={<LoginRegister/>} />
           <Route path="/create-join-room" element={<CreateJoinRoom />} />
@@ -38,7 +37,6 @@ function App() {
           <Route path="/create-new-room" element={<CreateNewRoom/>}/>
           <Route path="/room-list/:codigoSala" element={<RoomList/>}/>
         </Routes>
-    </BrowserRouter>
 
     </>
   );
