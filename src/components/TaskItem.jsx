@@ -8,6 +8,11 @@ function TaskItem({ user, title, etiqueta }) {
     setIsViewTaskModalOpen(!isViewTaskModalOpen);
   };
 
+  // Desestructuración de los props para acceder a los parámetros
+  const { taskid, users, title, descripcion, progreso, etiqueta, fechaInicio, fechaFin, user_creador} = props;
+
+  // Función para obtener los estilos según la dificultad
+
   const getStyles = (etiqueta) => {
     switch (etiqueta) {
       case "Fácil":
@@ -24,28 +29,46 @@ function TaskItem({ user, title, etiqueta }) {
   const { backgroundColor, textColor } = getStyles(etiqueta);
 
   return (
-      <div className="w-full mb-3">
-        <button
-            onClick={toggleViewTaskModal}
-            className="bg-white bg-opacity-90 shadow-md rounded-lg w-full p-4 flex flex-col items-start text-left transition-all duration-200 hover:bg-opacity-100 hover:shadow-lg"
-        >
-          <span className="text-gray-500 text-sm mb-1">{user}</span>
-          <h3 className="text-gray-800 font-semibold text-lg mb-2 break-words">{title}</h3>
-          <div className="flex flex-wrap gap-1">
-          <span
-              className="rounded-full text-xs font-medium px-2 py-1"
-              style={{
-                backgroundColor,
-                color: textColor,
-              }}
-          >
-            {etiqueta}
-          </span>
-          </div>
-        </button>
+    <>
+      <button
+        onClick={toggleViewTaskModal}
+        className="bg-[#f8fbfb] bg-opacity-65 shadow-sm rounded-lg min-h-28 w-[80%] mt-3 p-4 flex flex-col items-start"
+      >
+        <span className="text-gray-400 font-semibold text-md">{user_creador}</span>
+        <p className="text-gray-700 font-bold text-xl">{title}</p>
 
-        {isViewTaskModalOpen && <ViewTask toggle={toggleViewTaskModal} />}
-      </div>
+      {/* Renderizar la etiqueta solo si existe */}
+      {etiqueta && (
+        <span
+          className="rounded-full text-sm font-semibold px-3 py-[1px]"
+          style={{
+            backgroundColor: backgroundColor,
+            color: textColor,
+          }}
+        >
+          {etiqueta}
+        </span>
+      )}
+
+      </button>
+
+      {/* Modal para ver la tarea en detalle */}
+      {isViewTaskModalOpen && (
+        <ViewTask 
+        toggle={toggleViewTaskModal} 
+        taskid={taskid}
+        users={users}
+        title={title}
+        descripcion={descripcion}
+        progreso={progreso}
+        etiqueta={etiqueta}
+        fechaInicio={fechaInicio}
+        fechaFin={fechaFin}
+        user_creador={user_creador}
+        />
+      )}
+    </>
+
   );
 }
 

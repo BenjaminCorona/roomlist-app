@@ -116,18 +116,22 @@ export default function RoomList() {
     fetchData();
   }, [codigoSala, navigate]);
 
-  const updateTarjetas = async () => {
-    try {
-      const resultList = await pb.collection('Tarjetas').getFullList({
-        filter: `ID_Sala.Codigo_Sala="${codigoSala}"`,
-        expand: 'ID_Creador',
-        sort: '-created',
-      }, { requestKey: null });
-      console.log(resultList);
-      if (resultList.length > 0) {
-        setTarjetas(resultList);
-      } else {
-        console.log("No se encontraron tarjetas con el id de sala especificado.");
+  //Recuperar las tarjetas de la sala
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resultList = await pb.collection('Tarjetas').getFullList({
+          filter: `ID_Sala.Codigo_Sala="${codigoSala}"`,
+          expand: 'ID_Usuario, ID_Creador',
+        });
+        if (resultList.length > 0) {
+          setTarjetas(resultList);
+        } else {
+          console.log("No se encontraron tarjetas con el id de sala especificado.");
+        }
+      } catch (error) {
+        console.error("Error al recuperar las tarjetas:", error);
+
       }
     } catch (error) {
       console.error("Error al recuperar las tarjetas:", error);
@@ -254,16 +258,25 @@ export default function RoomList() {
         >
           <div className="bg-gray-300 bg-opacity-75 shadow-lg flex flex-col items-center p-3 w-[50vw] h-full rounded-xl mr-3 ml-3">
             <span className="font-bold bg-gray-100 text-gray-800 bg-opacity-70 rounded-full px-3 py-0 mb-4 text-md flex items-center justify-center ">
-              <CircleCheckBig size={20} className="mr-2" /> To do
+              <CircleCheckBig size={20} className="mr-2" /> Por Hacer
             </span>
             <div className="flex flex-col items-center w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
-              {tarjetas.map((tarjeta) => (
 
+              {tarjetas
+              .filter((tarjeta) => tarjeta.Progreso === "Por Hacer")  // Filtra según el estado
+              .map((tarjeta) => (
                   <TaskItem
-                      key={tarjeta.id}
-                      title={tarjeta.Titulo}      // Título de la tarjeta
-                      user={tarjeta.expand?.ID_Creador?.username || 'No asignado'}
-                      etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
+                  key={tarjeta.id}
+                  taskid={tarjeta.id}
+                  title={tarjeta.Titulo}      // Título de la tarjeta
+                  descripcion={tarjeta.Descripcion}
+                  fechaInicio={tarjeta.Fecha_Inicio}
+                  fechaFin={tarjeta.Fecha_Terminado}
+                  progreso={tarjeta.Progreso}
+                  etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
+                  user_creador={tarjeta.expand.ID_Creador.username}
+                  users={tarjeta.expand.ID_Usuario.map(user => user.username)}
+
                   />
 
               ))}
@@ -272,16 +285,56 @@ export default function RoomList() {
 
           <div className=" bg-gray-300 bg-opacity-75 shadow-lg flex flex-col items-center p-3 w-[50vw] h-full rounded-xl mr-3 ml-3">
             <span className="font-bold bg-orange-100 text-orange-800 bg-opacity-70 rounded-full px-3 py-0 mb-4 text-md flex items-center justify-center">
-              <CircleCheckBig size={20} className="mr-2" /> In progress
+              <CircleCheckBig size={20} className="mr-2" /> En Progreso
             </span>
-            <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto"></div>
+
+            <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
+              {tarjetas
+              .filter((tarjeta) => tarjeta.Progreso === "En Progreso")  // Filtra según el estado
+              .map((tarjeta) => (
+                  <TaskItem
+                  key={tarjeta.id}
+                  taskid={tarjeta.id}
+                  title={tarjeta.Titulo}      // Título de la tarjeta
+                  descripcion={tarjeta.Descripcion}
+                  fechaInicio={tarjeta.Fecha_Inicio}
+                  fechaFin={tarjeta.Fecha_Terminado}
+                  progreso={tarjeta.Progreso}
+                  etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
+                  user_creador={tarjeta.expand.ID_Creador.username}
+                  users={tarjeta.expand.ID_Usuario.map(user => user.username)}
+                  />
+              ))}
+
+            </div>
+
           </div>
 
           <div className="bg-gray-300 bg-opacity-75 shadow-lg flex flex-col items-center p-3 w-[50vw] h-full rounded-xl mr-3 ml-3">
             <span className="font-bold bg-green-100 text-green-800 bg-opacity-70 rounded-full px-3 py-0 mb-4 text-md flex items-center justify-center">
-              <CircleCheckBig size={20} className="mr-2" /> Done
+              <CircleCheckBig size={20} className="mr-2" /> Hecho
             </span>
-            <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto"></div>
+
+            <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
+              {tarjetas
+              .filter((tarjeta) => tarjeta.Progreso === "Hecho")  // Filtra según el estado
+              .map((tarjeta) => (
+                  <TaskItem
+                      key={tarjeta.id}
+                      taskid={tarjeta.id}
+                      title={tarjeta.Titulo}      // Título de la tarjeta
+                      descripcion={tarjeta.Descripcion}
+                      fechaInicio={tarjeta.Fecha_Inicio}
+                      fechaFin={tarjeta.Fecha_Terminado}
+                      progreso={tarjeta.Progreso}
+                      etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
+                      user_creador={tarjeta.expand.ID_Creador.username}
+                      users={tarjeta.expand.ID_Usuario.map(user => user.username)}
+                  />
+              ))}
+
+            </div>
+
           </div>
         </div>
       </div>
