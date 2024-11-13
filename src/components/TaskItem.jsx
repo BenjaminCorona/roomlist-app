@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ViewTask from "../pages/ViewTask";
 
-function TaskItem({ user, title, etiqueta }) {
+function TaskItem(props) {
   const [isViewTaskModalOpen, setIsViewTaskModalOpen] = useState(false);
 
   const toggleViewTaskModal = () => {
