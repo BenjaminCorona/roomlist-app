@@ -279,7 +279,7 @@ export default function RoomList() {
             <span className="font-bold bg-gray-100 text-gray-800 bg-opacity-70 rounded-full px-3 py-0 mb-4 text-md flex items-center justify-center ">
               <CircleCheckBig size={20} className="mr-2" /> Por Hacer
             </span>
-            <div className="flex flex-col items-center w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
+            <div className="flex flex-col items-center w-full h-screen rounded-xl mr-3 ml-3 overflow-auto space-y-4">
 
               {tarjetas
               .filter((tarjeta) => tarjeta.Progreso === "Por Hacer")  // Filtra según el estado
@@ -306,7 +306,7 @@ export default function RoomList() {
             <span className="font-bold bg-orange-100 text-orange-800 bg-opacity-70 rounded-full px-3 py-0 mb-4 text-md flex items-center justify-center">
               <CircleCheckBig size={20} className="mr-2" /> En Progreso
             </span>
-            <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
+            <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto space-y-4">
               {tarjetas
               .filter((tarjeta) => tarjeta.Progreso === "En Progreso")  // Filtra según el estado
               .map((tarjeta) => (
@@ -332,7 +332,7 @@ export default function RoomList() {
             <span className="font-bold bg-green-100 text-green-800 bg-opacity-70 rounded-full px-3 py-0 mb-4 text-md flex items-center justify-center">
               <CircleCheckBig size={20} className="mr-2" /> Hecho
             </span>
-            <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto">
+            <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto space-y-4">
               {tarjetas
               .filter((tarjeta) => tarjeta.Progreso === "Hecho")  // Filtra según el estado
               .map((tarjeta) => (
