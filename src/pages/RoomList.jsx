@@ -227,7 +227,7 @@ export default function RoomList() {
                   progreso={tarjeta.Progreso}
                   etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
                   user_creador={tarjeta.expand.ID_Creador.username}
-                  users={tarjeta.expand.ID_Usuario.map(user => user.username)}
+                  users={tarjeta.expand.ID_Usuario ? tarjeta.expand.ID_Usuario.map(user => user.username) : []}
                   />
               ))}
             </div>
@@ -251,7 +251,7 @@ export default function RoomList() {
                   progreso={tarjeta.Progreso}
                   etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
                   user_creador={tarjeta.expand.ID_Creador.username}
-                  users={tarjeta.expand.ID_Usuario.map(user => user.username)}
+                  users={tarjeta.expand.ID_Usuario ? tarjeta.expand.ID_Usuario.map(user => user.username) : []}
                   />
               ))}
 
@@ -276,7 +276,7 @@ export default function RoomList() {
                       progreso={tarjeta.Progreso}
                       etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
                       user_creador={tarjeta.expand.ID_Creador.username}
-                      users={tarjeta.expand.ID_Usuario.map(user => user.username)}
+                      users={tarjeta.expand.ID_Usuario ? tarjeta.expand.ID_Usuario.map(user => user.username) : []}
                   />
               ))}
 
