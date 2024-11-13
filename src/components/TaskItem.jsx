@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import ViewTask from "../pages/ViewTask";
 
-function TaskItem(props) {
-  // Estado para controlar la visibilidad del modal de ViewTask
+function TaskItem({ user, title, etiqueta }) {
   const [isViewTaskModalOpen, setIsViewTaskModalOpen] = useState(false);
 
-  // Función para abrir o cerrar el modal de ViewTask
   const toggleViewTaskModal = () => {
     setIsViewTaskModalOpen(!isViewTaskModalOpen);
   };
@@ -13,29 +11,17 @@ function TaskItem(props) {
   // Desestructuración de los props para acceder a los parámetros
   const { taskid, users, title, descripcion, progreso, etiqueta, fechaInicio, fechaFin, user_creador} = props;
 
-  // Función para obtener los estilos según la dificultad
+
   const getStyles = (etiqueta) => {
     switch (etiqueta) {
       case "Fácil":
-        return {
-          backgroundColor: "#36b63c",
-          textColor: "#E0F7FA",
-        };
+        return { backgroundColor: "#36b63c", textColor: "#E0F7FA" };
       case "Medio":
-        return {
-          backgroundColor: "#e6ad1d",
-          textColor: "#6A1B9A",
-        };
+        return { backgroundColor: "#e6ad1d", textColor: "#6A1B9A" };
       case "Difícil":
-        return {
-          backgroundColor: "#C62828",
-          textColor: "#FFEBEE",
-        };
+        return { backgroundColor: "#C62828", textColor: "#FFEBEE" };
       default:
-        return {
-          backgroundColor: "#cccccc", // Color por defecto
-          textColor: "#000000", // Texto por defecto
-        };
+        return { backgroundColor: "#cccccc", textColor: "#000000" };
     }
   };
 
@@ -45,7 +31,7 @@ function TaskItem(props) {
       <>
         <button
             onClick={toggleViewTaskModal}
-            className="bg-[#f8fbfb] bg-opacity-65 shadow-sm rounded-lg min-h-28 w-[80%] mt-3 p-4 flex flex-col items-start"
+            className="bg-white bg-opacity-90 shadow-md rounded-lg w-full p-4 flex flex-col items-start text-left transition-all duration-200 hover:bg-opacity-100 hover:shadow-lg"
         >
           <span className="text-gray-400 font-semibold text-md">{user_creador}</span>
           <p className="text-gray-700 font-bold text-xl">{title}</p>
@@ -81,6 +67,7 @@ function TaskItem(props) {
             />
         )}
       </>
+
   );
 }
 
