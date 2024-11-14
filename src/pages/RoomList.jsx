@@ -295,7 +295,7 @@ export default function RoomList() {
                   etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
                   user_creador={tarjeta.expand.ID_Creador.username}
                   users={tarjeta.expand.ID_Usuario ? tarjeta.expand.ID_Usuario.map(user => user.username) : []}
-
+                  roomCode={codigoSala}
                   />
 
               ))}
@@ -321,6 +321,7 @@ export default function RoomList() {
                   etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
                   user_creador={tarjeta.expand.ID_Creador.username}
                   users={tarjeta.expand.ID_Usuario ? tarjeta.expand.ID_Usuario.map(user => user.username) : []}
+                  roomCode={codigoSala}
                   />
               ))}
 
@@ -347,6 +348,7 @@ export default function RoomList() {
                       etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
                       user_creador={tarjeta.expand.ID_Creador.username}
                       users={tarjeta.expand.ID_Usuario ? tarjeta.expand.ID_Usuario.map(user => user.username) : []}
+                      roomCode={codigoSala}
                   />
               ))}
 

@@ -1,21 +1,33 @@
 import { useState } from 'react';
 import { Pencil, Link, MoreHorizontal, File, CircleUser, X } from 'lucide-react';
 import PocketBase from 'pocketbase';
+import {logCardStatus} from "../tools/triggers_history.js";
 
-export default function ViewTask({toggle, taskid, users, title, descripcion, progreso, etiqueta, fechaInicio, fechaFin, user_creador}) {
-  
+export default function ViewTask({toggle, taskid, users, title, descripcion, progreso, etiqueta, fechaInicio, fechaFin, user_creador, onStatusChange, roomCode}) {
   const pb = new PocketBase('https://roomlist.pockethost.io');
-  const [progresos, setProgreso] = useState(progreso); // Estado para el progreso
+  const [progresos, setProgreso] = useState(progreso);
+
+const handleStatusChange = (event) => {
+  const newStatus = event.target.value;
+  setProgreso(newStatus);
+  onStatusChange(newStatus);
+};
 
   // Función para guardar cambios en la base de datos
   const handleSave = async () => {
     try {
       const data ={
         "Progreso": progresos
-      };      
-  
-      const record = await pb.collection('Tarjetas').update(taskid,data); // Actualiza el registro en PocketBase
-      window.location.reload(); // Recarga la página
+      };
+
+      const record = await pb.collection('Tarjetas').update(taskid, data); // Actualiza el registro en PocketBase
+      const userinfo = pb.authStore.model;
+      console.log(roomCode);
+      console.log(progresos);
+      console.log(title);
+      console.log(userinfo);
+      await logCardStatus(userinfo, title, roomCode, progresos);
+      window.location.reload();
     } catch (error) {
       console.error('Error al guardar el progreso:', error);
     }
@@ -105,7 +117,7 @@ export default function ViewTask({toggle, taskid, users, title, descripcion, pro
                 <select
                   className="w-full border border-gray-300 rounded p-2 bg-white"
                   value={progresos}
-                  onChange={(e) => setProgreso(e.target.value)} // Actualiza `progreso` con el valor seleccionado
+                  onChange={handleStatusChange} // Actualiza `progreso` con el valor seleccionado
                 >
                   <option value="Por Hacer">Por Hacer</option>
                   <option value="En Progreso">En Progreso</option>

@@ -1,16 +1,25 @@
 import React, { useState } from "react";
 import ViewTask from "../pages/ViewTask";
+import { logCardStatus } from "../tools/triggers_history.js";
+import PocketBase from "pocketbase";
 
 function TaskItem(props) {
   const [isViewTaskModalOpen, setIsViewTaskModalOpen] = useState(false);
-
+  const pb = new PocketBase('https://roomlist.pockethost.io');
   const toggleViewTaskModal = () => {
     setIsViewTaskModalOpen(!isViewTaskModalOpen);
   };
 
   // Desestructuración de los props para acceder a los parámetros
-  const { taskid, users, title, descripcion, progreso, etiqueta, fechaInicio, fechaFin, user_creador} = props;
+  const { taskid, users, title, descripcion, progreso, etiqueta, fechaInicio, fechaFin, user_creador, roomCode} = props;
 
+  const handleStatusChange = async (newStatus) => {
+    try {
+      console.log("Detecto el cambio");
+    } catch (error) {
+      console.error('Error al actualizar el estado de la tarjeta:', error);
+    }
+  };
 
   const getStyles = (etiqueta) => {
     switch (etiqueta) {
@@ -64,6 +73,8 @@ function TaskItem(props) {
                 fechaInicio={fechaInicio}
                 fechaFin={fechaFin}
                 user_creador={user_creador}
+                onStatusChange={handleStatusChange}
+                roomCode={roomCode}
             />
         )}
       </>
