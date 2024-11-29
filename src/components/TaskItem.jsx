@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ViewTask from "../pages/ViewTask";
 import { logCardStatus } from "../tools/triggers_history.js";
 import PocketBase from "pocketbase";
+import { use } from "framer-motion/client";
 
 function TaskItem(props) {
   const [isViewTaskModalOpen, setIsViewTaskModalOpen] = useState(false);

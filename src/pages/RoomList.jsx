@@ -19,12 +19,12 @@ import {
   History,
   HistoryIcon,
   LogOut,
-  User
+  User,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import PocketBase from "pocketbase";
 import swal from "sweetalert";
-import { logRoomEntry } from '../tools/triggers_history.js';
+import { logRoomEntry } from "../tools/triggers_history.js";
 
 export default function RoomList() {
   const pb = new PocketBase("https://roomlist.pockethost.io");
@@ -83,10 +83,14 @@ export default function RoomList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
-        const resultList = await pb.collection('Salas').getList(1, 1, {
-          filter: `Codigo_Sala="${codigoSala}"`
-        }, { requestKey: null });
+        const resultList = await pb.collection("Salas").getList(
+          1,
+          1,
+          {
+            filter: `Codigo_Sala="${codigoSala}"`,
+          },
+          { requestKey: null }
+        );
 
         if (resultList && resultList.items.length > 0) {
           const sala = resultList.items[0];
@@ -115,42 +119,54 @@ export default function RoomList() {
     };
     fetchData();
   }, [codigoSala, navigate]);
+
+  //Recuperar las tarjetas de la sala
   
-    //Recuperar las tarjetas de la sala
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const resultList = await pb.collection('Tarjetas').getFullList({
-          filter: `ID_Sala.Codigo_Sala="${codigoSala}"`,
-          expand: 'ID_Usuario, ID_Creador',
-        });
-        if (resultList.length > 0) {
-          setTarjetas(resultList);
-        } else {
-          console.log("No se encontraron tarjetas con el id de sala especificado.");
-        }
-      } catch (error) {
-        console.error("Error al recuperar las tarjetas:", error);
+  const fetchData = async () => {
+    try {
+      const resultList = await pb.collection("Tarjetas").getFullList({
+        filter: `ID_Sala.Codigo_Sala="${codigoSala}"`,
+        expand: "ID_Usuario, ID_Creador",
+        sort: "-created",
+      },
+      { requestKey: null });
+      if (resultList.length > 0) {
+        setTarjetas(resultList);
+      } else {
+        console.log(
+          "No se encontraron tarjetas con el id de sala especificado."
+        );
       }
-    };
+    } catch (error) {
+      console.error("Error al recuperar las tarjetas:", error);
+    }
+  };
+  useEffect(() => {
+  
     if (codigoSala) {
       fetchData();
     }
   }, [codigoSala]);
-
-
+   
+/** 
   const updateTarjetas = async () => {
     try {
-      const resultList = await pb.collection('Tarjetas').getFullList({
-        filter: `ID_Sala.Codigo_Sala="${codigoSala}"`,
-        expand: 'ID_Creador',
-        sort: '-created',
-      }, { requestKey: null });
+      const resultList = await pb.collection("Tarjetas").getFullList(
+        {
+          filter: `ID_Sala.Codigo_Sala="${codigoSala}"`,
+          expand: "ID_Creador",
+          sort: "-created",
+        },
+        { requestKey: null }
+      );
+      console.log("Tarjetas recuperadas:");
       console.log(resultList);
       if (resultList.length > 0) {
         setTarjetas(resultList);
       } else {
-        console.log("No se encontraron tarjetas con el id de sala especificado.");
+        console.log(
+          "No se encontraron tarjetas con el id de sala especificado."
+        );
       }
     } catch (error) {
       console.error("Error al recuperar las tarjetas:", error);
@@ -162,6 +178,7 @@ export default function RoomList() {
       updateTarjetas();
     }
   }, [codigoSala]);
+  */
 
   const exitRoom = () => {
     swal("Sala cerrada!", "La sala ha sido cerrada correctamente", "success");
@@ -180,7 +197,6 @@ export default function RoomList() {
     }
   }, []);
 
-  
   /** 
   useEffect(() => {
     const fetchRecords = async () => {
@@ -232,7 +248,13 @@ export default function RoomList() {
         >
           <Plus size={16} className="mr-2" /> Añadir tarea
         </button>
-        {isAddNewTaskModalOpen && <AddNewTask toggle={toggleAddNewTaskModal} codigoSala={codigoSala} updateTarjetas={updateTarjetas} />}
+        {isAddNewTaskModalOpen && (
+          <AddNewTask
+            toggle={toggleAddNewTaskModal}
+            codigoSala={codigoSala}
+            updateTarjetas={fetchData}
+          />
+        )}
         <div className="space-y-2">
           <button className="w-full justify-start py-2 px-4 rounded flex items-center bg-gray-200 hover:bg-gray-300">
             <Home size={16} className="mr-2" /> Inicio
@@ -246,7 +268,7 @@ export default function RoomList() {
         </div>
 
         <div className="mt-6">
-          <GroupMembers/>
+          <GroupMembers />
         </div>
         {/** 
         <div className="mt-6">
@@ -280,25 +302,27 @@ export default function RoomList() {
               <CircleCheckBig size={20} className="mr-2" /> Por Hacer
             </span>
             <div className="flex flex-col items-center w-full h-screen rounded-xl mr-3 ml-3 overflow-auto space-y-4">
-
               {tarjetas
-              .filter((tarjeta) => tarjeta.Progreso === "Por Hacer")  // Filtra según el estado
-              .map((tarjeta) => (
+                .filter((tarjeta) => tarjeta.Progreso === "Por Hacer") // Filtra según el estado
+                .map((tarjeta) => (
                   <TaskItem
-                  key={tarjeta.id}
-                  taskid={tarjeta.id}
-                  title={tarjeta.Titulo}      // Título de la tarjeta
-                  descripcion={tarjeta.Descripcion}
-                  fechaInicio={tarjeta.Fecha_Inicio}
-                  fechaFin={tarjeta.Fecha_Terminado}
-                  progreso={tarjeta.Progreso}
-                  etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
-                  user_creador={tarjeta.expand.ID_Creador.username}
-                  users={tarjeta.expand.ID_Usuario ? tarjeta.expand.ID_Usuario.map(user => user.username) : []}
-                  roomCode={codigoSala}
+                    key={tarjeta.id}
+                    taskid={tarjeta.id}
+                    title={tarjeta.Titulo} // Título de la tarjeta
+                    descripcion={tarjeta.Descripcion}
+                    fechaInicio={tarjeta.Fecha_Inicio}
+                    fechaFin={tarjeta.Fecha_Terminado}
+                    progreso={tarjeta.Progreso}
+                    etiqueta={tarjeta.Etiqueta} // Etiqueta de la tarea
+                    user_creador={tarjeta.expand.ID_Creador.username}
+                    users={
+                      Array.isArray(tarjeta.expand.ID_Usuario)
+                        ? tarjeta.expand.ID_Usuario.map((user) => user.username)
+                        : []
+                    }
+                    roomCode={codigoSala}
                   />
-
-              ))}
+                ))}
             </div>
           </div>
 
@@ -308,25 +332,27 @@ export default function RoomList() {
             </span>
             <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto space-y-4">
               {tarjetas
-              .filter((tarjeta) => tarjeta.Progreso === "En Progreso")  // Filtra según el estado
-              .map((tarjeta) => (
+                .filter((tarjeta) => tarjeta.Progreso === "En Progreso") // Filtra según el estado
+                .map((tarjeta) => (
                   <TaskItem
-                  key={tarjeta.id}
-                  taskid={tarjeta.id}
-                  title={tarjeta.Titulo}      // Título de la tarjeta
-                  descripcion={tarjeta.Descripcion}
-                  fechaInicio={tarjeta.Fecha_Inicio}
-                  fechaFin={tarjeta.Fecha_Terminado}
-                  progreso={tarjeta.Progreso}
-                  etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
-                  user_creador={tarjeta.expand.ID_Creador.username}
-                  users={tarjeta.expand.ID_Usuario ? tarjeta.expand.ID_Usuario.map(user => user.username) : []}
-                  roomCode={codigoSala}
+                    key={tarjeta.id}
+                    taskid={tarjeta.id}
+                    title={tarjeta.Titulo} // Título de la tarjeta
+                    descripcion={tarjeta.Descripcion}
+                    fechaInicio={tarjeta.Fecha_Inicio}
+                    fechaFin={tarjeta.Fecha_Terminado}
+                    progreso={tarjeta.Progreso}
+                    etiqueta={tarjeta.Etiqueta} // Etiqueta de la tarea
+                    user_creador={tarjeta.expand.ID_Creador.username}
+                    users={
+                      tarjeta.expand.ID_Usuario
+                        ? tarjeta.expand.ID_Usuario.map((user) => user.username)
+                        : []
+                    }
+                    roomCode={codigoSala}
                   />
-              ))}
-
+                ))}
             </div>
-
           </div>
 
           <div className="bg-gray-300 bg-opacity-75 shadow-lg flex flex-col items-center p-3 w-[50vw] h-full rounded-xl mr-3 ml-3">
@@ -335,23 +361,26 @@ export default function RoomList() {
             </span>
             <div className=" flex flex-col items-center  w-full h-screen rounded-xl mr-3 ml-3 overflow-auto space-y-4">
               {tarjetas
-              .filter((tarjeta) => tarjeta.Progreso === "Hecho")  // Filtra según el estado
-              .map((tarjeta) => (
+                .filter((tarjeta) => tarjeta.Progreso === "Hecho") // Filtra según el estado
+                .map((tarjeta) => (
                   <TaskItem
-                      key={tarjeta.id}
-                      taskid={tarjeta.id}
-                      title={tarjeta.Titulo}      // Título de la tarjeta
-                      descripcion={tarjeta.Descripcion}
-                      fechaInicio={tarjeta.Fecha_Inicio}
-                      fechaFin={tarjeta.Fecha_Terminado}
-                      progreso={tarjeta.Progreso}
-                      etiqueta={tarjeta.Etiqueta}   // Etiqueta de la tarea
-                      user_creador={tarjeta.expand.ID_Creador.username}
-                      users={tarjeta.expand.ID_Usuario ? tarjeta.expand.ID_Usuario.map(user => user.username) : []}
-                      roomCode={codigoSala}
+                    key={tarjeta.id}
+                    taskid={tarjeta.id}
+                    title={tarjeta.Titulo} // Título de la tarjeta
+                    descripcion={tarjeta.Descripcion}
+                    fechaInicio={tarjeta.Fecha_Inicio}
+                    fechaFin={tarjeta.Fecha_Terminado}
+                    progreso={tarjeta.Progreso}
+                    etiqueta={tarjeta.Etiqueta} // Etiqueta de la tarea
+                    user_creador={tarjeta.expand.ID_Creador.username}
+                    users={
+                      tarjeta.expand.ID_Usuario
+                        ? tarjeta.expand.ID_Usuario.map((user) => user.username)
+                        : []
+                    }
+                    roomCode={codigoSala}
                   />
-              ))}
-
+                ))}
             </div>
           </div>
         </div>
